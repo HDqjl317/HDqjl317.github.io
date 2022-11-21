@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="无知亦乐, Cpp Golang 公众号：无知亦乐 LeetCode">
+    <meta name="keywords" content="音视频入门基础知识01, Cpp Golang 公众号：无知亦乐 LeetCode">
     <meta name="description" content="吾生也有涯，而知也无涯。">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>无知亦乐 | 无知亦乐的博客</title>
+    <title>音视频入门基础知识01 | 无知亦乐的博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">无知亦乐</h1>
+                    <h1 class="description center-align post-title">音视频入门基础知识01</h1>
                 </div>
             </div>
         </div>
@@ -464,7 +464,131 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h3 id="一、视频基础知识"><a href="#一、视频基础知识" class="headerlink" title="一、视频基础知识"></a>一、视频基础知识</h3><ul>
+<li><p>视频基础知识</p>
+<ul>
+<li><p>视频、图像像素点数据格式</p>
+<ul>
+<li><p>GRAY 色彩空间</p>
+</li>
+<li><p>YUV 色彩空间</p>
+</li>
+<li><p>RGB 色彩空间</p>
+</li>
+<li><p>HSL 和 HSV 色彩空间</p>
+</li>
+</ul>
+</li>
+<li><p>图像的色彩空间&#x2F;色域</p>
+<ul>
+<li><p>BT.601、BT.709和BT.2020</p>
+</li>
+<li><p>偏色问题：色彩空间的差异导致</p>
+</li>
+</ul>
+</li>
+<li><p>视频逐行、隔行扫描与帧率</p>
+<ul>
+<li><p>隔行扫描：扫描设备会交换扫描偶数行和奇数行    产生条纹</p>
+</li>
+<li><p>逐行扫描：从上到下扫描每幅图像    闪烁效应</p>
+</li>
+<li><p>帧率：一秒刷新的视频图像帧数</p>
+</li>
+</ul>
+</li>
+<li><p>图像分辨率与比例</p>
+<ul>
+<li><p>分辨率：衡量图像细节表现力的重要技术参数</p>
+</li>
+<li><p>宽高比（DAR）：不同分辨率的图像的差别</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="二、音频基础知识"><a href="#二、音频基础知识" class="headerlink" title="二、音频基础知识"></a>二、音频基础知识</h3><ul>
+<li><p>音频基础知识</p>
+<ul>
+<li><p>音频采样数据格式</p>
+<ul>
+<li><p>模拟信号——数字信号——采样、量化和编码——离散的数字信号</p>
+</li>
+<li><p>PCM（模拟-&gt;数字）采样数据的格式转换</p>
+</li>
+</ul>
+</li>
+<li><p>音频采用频率</p>
+<ul>
+<li><p>人耳：20Hz~200kHz</p>
+</li>
+<li><p>音频采样频率：通常40kHz以上（无损）</p>
+</li>
+<li><p>专业设备的采样频率</p>
+</li>
+</ul>
+</li>
+<li><p>音频的声道与布局</p>
+<ul>
+<li><p>采集不同方位的声音后通过不同方位的扬声器播放出来</p>
+</li>
+<li><p>左声道、右声道、立体声等等</p>
+</li>
+</ul>
+</li>
+<li><p>音频采样位深度</p>
+<ul>
+<li><p>声音的动态范围</p>
+</li>
+<li><p>8bit（底线）16bit(音频通话) 24bit&#x2F;32bit（高保真音频）</p>
+</li>
+</ul>
+</li>
+<li><p>音频的码率</p>
+<ul>
+<li><p>bits per second(bps)每秒钟存储或压缩的传输的编码压缩后的数据量</p>
+</li>
+<li><p>码率：音频的质量，一般高清格式的码率更高</p>
+</li>
+<li><p>公式：声道数 x 采样率 x 采样位深 x 时长 &#x2F; 60s</p>
+</li>
+</ul>
+</li>
+<li><p>音频的编解码</p>
+<ul>
+<li><p>AAC：适合做音乐压缩，支持的音质与硬件兼容性更好一些</p>
+</li>
+<li><p>MP3：音频编码压缩方式相对于AAC来说，性价比低了一些</p>
+</li>
+<li><p>AC-3：效果更好，兼容性略差</p>
+</li>
+<li><p>OPUS：适合做音频通话，兼容性好</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="三、音视频的封装与转码"><a href="#三、音视频的封装与转码" class="headerlink" title="三、音视频的封装与转码"></a>三、音视频的封装与转码</h3><ul>
+<li><p>音视频的封装与转码</p>
+<ul>
+<li><p>编码</p>
+</li>
+<li><p>解码</p>
+</li>
+<li><p>封装</p>
+</li>
+<li><p>封装容器格式MP4</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="四、音视频技术的发展与迭代"><a href="#四、音视频技术的发展与迭代" class="headerlink" title="四、音视频技术的发展与迭代"></a>四、音视频技术的发展与迭代</h3><ul>
+<li>直播：行业发展与技术迭代</li>
+<li>技术迭代：编码、传输协议、封装、传输质量优化策略、平台功能</li>
+</ul>
+
                 
             </div>
             <hr/>
@@ -490,7 +614,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/11/21/wu-zhi-yi-le/">http://example.com/2022/11/21/wu-zhi-yi-le/</a>
+                    <a href="http://example.com/2022/11/21/yin-shi-pin-ru-men-ji-chu-zhi-shi-01/">http://example.com/2022/11/21/yin-shi-pin-ru-men-ji-chu-zhi-shi-01/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -695,9 +819,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2022/11/21/yin-shi-pin-ru-men-ji-chu-zhi-shi-01/">
                     <div class="card-image">
@@ -715,9 +840,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-11-21
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -726,6 +851,7 @@
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -736,13 +862,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/11/21/hello-world/">
+                <a href="/2022/11/21/wu-zhi-yi-le/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="无知亦乐">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">无知亦乐</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
