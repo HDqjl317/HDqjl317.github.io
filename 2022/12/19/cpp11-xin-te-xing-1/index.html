@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="个人简历, Cpp Golang 公众号：无知亦乐 LeetCode">
+    <meta name="keywords" content="c++11新特性(一), Cpp Golang 公众号：无知亦乐 LeetCode">
     <meta name="description" content="吾生也有涯，而知也无涯。">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>个人简历 | 无知亦乐的博客</title>
+    <title>c++11新特性(一) | 无知亦乐的博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">个人简历</h1>
+                    <h1 class="description center-align post-title">c++11新特性(一)</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86/">
-                                <span class="chip bg-color">个人简历</span>
+                            <a href="/tags/cpp/">
+                                <span class="chip bg-color">cpp</span>
                             </a>
                         
                     </div>
@@ -443,8 +443,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E6%9D%82%E8%B0%88/" class="post-category">
-                                杂谈
+                            <a href="/categories/cpp/" class="post-category">
+                                cpp
                             </a>
                         
                     </div>
@@ -456,7 +456,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-11-21
+                    2022-12-19
                 </div>
                 
 
@@ -477,18 +477,54 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <script id="hbeData" type="hbeData" data-hmacdigest="ca814a1f2bed779b6b6b0d84b555043a340ed005414f8d216d05806201a6a3d1">0150ca797fa56435824bef8bf3359881dfb30ee4b651c1a0be66e88bb63c0d27f09df3eb5647cc5cb9a3ee32c7f89cec79b09b84b04858f4f2877884b2368cf7f3f300a37a949ff34fc5a222972ab908f69acd4d1ec4729b37c8c433de6cbe59172900a8bc6830912a7b1a7e83045bddb77c0b855d8dc47754b0ee36290614ba6b1707dac01160be6bb1f22ed7a2f88f7fa3a32456d9b5b79086244df905276f4af1bb86f51ea03ca2f1b66675a40edd</script>
-  <div class="hbe hbe-content">
-    <div class="hbe hbe-input hbe-input-default">
-      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
-      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
-        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hey, password is required here.</span>
-      </label>
-    </div>
-  </div>
-</div>
-<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
+                <h3 id="1-查验机器环境"><a href="#1-查验机器环境" class="headerlink" title="1.查验机器环境"></a>1.查验机器环境</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Standard Clib: &quot;</span> &lt;&lt; __STDC_HOSTED__ &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Standard C: &quot;</span> &lt;&lt; __STDC__ &lt;&lt; endl;</span><br><span class="line">    <span class="comment">// cout &lt;&lt; &quot;C Standard version: &quot; &lt;&lt; __STDC_VERSION__ &lt;&lt; endl;</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;ISO/IEC &quot;</span> &lt;&lt; __STDC_ISO_10646__ &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">Standard Clib: 1</span></span><br><span class="line"><span class="comment">Standard C: 1</span></span><br><span class="line"><span class="comment">ISO/IEC 201706 </span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-返回函数的名字"><a href="#2-返回函数的名字" class="headerlink" title="2.返回函数的名字"></a>2.返回函数的名字</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 返回函数的名字，预定义标识符 __func__</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">const</span> <span class="type">char</span> *<span class="title">hello</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> __func__; &#125;</span><br><span class="line"><span class="function"><span class="type">const</span> <span class="type">char</span> *<span class="title">world</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> __func__; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">TestStruct</span> &#123;</span><br><span class="line">    <span class="built_in">TestStruct</span>() : <span class="built_in">name</span>(__func__) &#123;&#125;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *name;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="built_in">hello</span>() &lt;&lt; <span class="string">&quot;, &quot;</span> &lt;&lt; <span class="built_in">world</span>() &lt;&lt; endl;</span><br><span class="line">    TestStruct ts;</span><br><span class="line">    cout &lt;&lt; ts.name &lt;&lt; endl; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">hello, world</span></span><br><span class="line"><span class="comment">TestStruct</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-变长参数宏定义"><a href="#3-变长参数宏定义" class="headerlink" title="3.变长参数宏定义"></a>3.变长参数宏定义</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 变长参数宏定义 __VA_ARGS__</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LOG(...) &#123;  \</span></span><br><span class="line"><span class="meta">    fprintf(stderr, <span class="string">&quot;%s: Line %d:\t&quot;</span>, __FILE__, __LINE__); \</span></span><br><span class="line"><span class="meta">    fprintf(stderr, __VA_ARGS__); \</span></span><br><span class="line"><span class="meta">    fprintf(stderr, <span class="string">&quot;\n&quot;</span>); \</span></span><br><span class="line"><span class="meta">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">3</span>;</span><br><span class="line">    <span class="built_in">LOG</span>(<span class="string">&quot;x = %d&quot;</span>, x);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">va_args.cpp: Line 13:   x = 3</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-静态断言与static-assert"><a href="#4-静态断言与static-assert" class="headerlink" title="4.静态断言与static_assert"></a>4.静态断言与static_assert</h3><ul>
+<li>断言宏assert只用于程序运行时</li>
+<li>#error 只在编译器预处理时有效</li>
+<li>static_assert用于程序编译时进行断言</li>
+</ul>
+<p>static_assert接收两个参数，一个bool值，一个字符串警告信息。</p>
+<p>static_assert的断言表达式的结果必须时在编译时期就可以计算的表达式，及必须是常量表达式。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt; <span class="function"><span class="type">int</span> <span class="title">bit_copy</span><span class="params">(T &amp;a, U &amp;b)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(b) == <span class="built_in">sizeof</span>(a), <span class="string">&quot;the parameters of bit_copy must have same width.&quot;</span>);</span><br><span class="line">    <span class="built_in">memcpy</span>(&amp;a, &amp;b, <span class="built_in">sizeof</span>(b));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">0x2468</span>;</span><br><span class="line">    <span class="type">double</span> b;</span><br><span class="line">    <span class="built_in">bit_copy</span>(a, b);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-noexcept修饰符与noexcept操作符"><a href="#5-noexcept修饰符与noexcept操作符" class="headerlink" title="5.noexcept修饰符与noexcept操作符"></a>5.noexcept修饰符与noexcept操作符</h3><ul>
+<li>noexcept不会抛出异常，通过调用std::terminate()来终止程序的运行，则这样可以减少异常机制带来的开销（比如，不用进行栈帧的一级一级的展开），有效的阻止了异常的传播与扩散。</li>
+<li>但也可能存在一些问题，比如noexcepet后无法保证对象的析构函数的正常调用，无法保证栈的自动释放等等。</li>
+<li>C++11默认将delete函数设置为noexcept，即nocept(true)，可以提高程序的安全性。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="type">void</span> *)</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line"><span class="type">void</span> <span class="keyword">operator</span> <span class="keyword">delete</span>[](<span class="type">void</span> *) <span class="keyword">noexcept</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> *<span class="keyword">operator</span> <span class="title">new</span><span class="params">(std::<span class="type">size_t</span>)</span> <span class="title">noexcept</span><span class="params">(<span class="literal">false</span>)</span></span>;  <span class="comment">//可以抛出异常</span></span><br><span class="line"><span class="type">void</span> *<span class="keyword">operator</span> <span class="keyword">new</span>[](std::<span class="type">size_t</span>) <span class="built_in">noexcept</span>(<span class="literal">false</span>); <span class="comment">//可以抛出异常</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">except_func</span><span class="params">()</span> <span class="keyword">noexcept</span></span>;   <span class="comment">//用于函数，默认noexcept(true)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">except_func</span><span class="params">()</span> <span class="title">noexcept</span><span class="params">(常量表达式)</span>  <span class="comment">//用于函数</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">fun</span><span class="params">()</span> <span class="title">noexcept</span><span class="params">(<span class="keyword">noexcept</span>(T(())))</span> </span>&#123;&#125; <span class="comment">//noexcept()用于模板</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-快速初始化成员变量"><a href="#6-快速初始化成员变量" class="headerlink" title="6.快速初始化成员变量"></a>6.快速初始化成员变量</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">C</span> &#123;</span><br><span class="line">    <span class="built_in">C</span>(<span class="type">int</span> i) : <span class="built_in">c</span>(i) &#123;&#125;;</span><br><span class="line">    <span class="type">int</span> c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Init</span> &#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">1</span>;				<span class="comment">//可以通过编译，以前的C++98不能通过编译</span></span><br><span class="line">    <span class="function">string <span class="title">b</span><span class="params">(<span class="string">&quot;hello&quot;</span>)</span></span>;		<span class="comment">//无法通过编译</span></span><br><span class="line">    <span class="function">C <span class="title">c</span><span class="params">(<span class="number">1</span>)</span></span>;					<span class="comment">//无法通过编译</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Init temp;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="7-override和final"><a href="#7-override和final" class="headerlink" title="7.override和final"></a>7.override和final</h3><ul>
+<li>override：保证在派生类中声明的重载函数，与基类的虚函数有相同的签名（函数名，参数，const属性）；</li>
+<li>final：阻止类的进一步派生 和 虚函数的进一步重写。</li>
+</ul>
+<p>加了override，明确表示派生类的这个虚函数是要重写基类的，如果派生类与基类虚函数的签名不一致，编译器就会报错。一个虚函数被声明为final，则派生类不能再重写它。</p>
+<h3 id="8-模板函数的默认模板参数"><a href="#8-模板函数的默认模板参数" class="headerlink" title="8.模板函数的默认模板参数"></a>8.模板函数的默认模板参数</h3><p>c++98不支持函数模板的默认模板参数，c++11支持。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">Deparm</span><span class="params">(<span class="type">int</span> m = <span class="number">3</span>)</span> </span>&#123;&#125;   <span class="comment">//c++98编译通过， c++11编译通过</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T = <span class="type">int</span> &gt;</span><br><span class="line">	<span class="keyword">class</span> DefClass &#123;&#125;;		<span class="comment">//c++98编译通过， c++11编译通过</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T = <span class="type">int</span> &gt;</span><br><span class="line">	<span class="type">void</span> <span class="built_in">DefTempParm</span>() &#123;&#125;   <span class="comment">//c++98编译不通过， c++11编译通过</span></span><br></pre></td></tr></table></figure>
+
+<p>对于类模板，如果定义模板类的默认模板参数，必须按照从左到右定义。而对于函数模板没有此要求。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2 = <span class="type">int</span>&gt; <span class="keyword">class</span> DefClass1;	<span class="comment">//c++11可以通过编译</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1 = <span class="type">int</span>, <span class="keyword">typename</span> T2&gt; <span class="keyword">class</span> DefClass2;	<span class="comment">//c++11不能通过编译</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="type">int</span> i = <span class="number">0</span>&gt; <span class="keyword">class</span> DefClass1;  <span class="comment">//c++11可以通过编译</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="type">int</span> i= <span class="number">0</span>, <span class="keyword">typename</span> T&gt; <span class="keyword">class</span> DefClass1;	  <span class="comment">//c++11不能通过编译</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1 </span>= <span class="type">int</span>, <span class="keyword">typename</span> T2&gt; <span class="function"><span class="type">void</span> <span class="title">DefFunc1</span><span class="params">(T1 a, T2 b)</span></span>;	<span class="comment">//c++11可以通过编译</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="type">int</span> i</span>= <span class="number">0</span>, <span class="keyword">typename</span> T&gt; <span class="function"><span class="type">void</span> <span class="title">DefFunc2</span><span class="params">(T a)</span></span>;					<span class="comment">//c++11可以通过编译</span></span><br></pre></td></tr></table></figure>
+
+
                 
             </div>
             <hr/>
@@ -514,7 +550,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/11/21/ge-ren-jian-li/">http://example.com/2022/11/21/ge-ren-jian-li/</a>
+                    <a href="http://example.com/2022/12/19/cpp11-xin-te-xing-1/">http://example.com/2022/12/19/cpp11-xin-te-xing-1/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -552,8 +588,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86/">
-                                    <span class="chip bg-color">个人简历</span>
+                                <a href="/tags/cpp/">
+                                    <span class="chip bg-color">cpp</span>
                                 </a>
                             
                         </div>
@@ -723,9 +759,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2022/12/19/cpp11-xin-te-xing-1/">
                     <div class="card-image">
@@ -743,9 +780,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-19
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-19
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -758,6 +795,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -776,19 +814,19 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/11/21/yin-shi-pin-ru-men-ji-chu-zhi-shi-01/">
+                <a href="/2022/11/21/ge-ren-jian-li/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="音视频入门基础知识01">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="个人简历">
                         
-                        <span class="card-title">音视频入门基础知识01</span>
+                        <span class="card-title">个人简历</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            Here's something encrypted, password is required to continue reading.
                         
                     </div>
                     <div class="publish-info">
@@ -799,8 +837,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E9%9F%B3%E8%A7%86%E9%A2%91/" class="post-category">
-                                    音视频
+                            <a href="/categories/%E6%9D%82%E8%B0%88/" class="post-category">
+                                    杂谈
                                 </a>
                             
                             
@@ -810,8 +848,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/">
-                        <span class="chip bg-color">音视频</span>
+                    <a href="/tags/%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86/">
+                        <span class="chip bg-color">个人简历</span>
                     </a>
                     
                 </div>
