@@ -1,0 +1,1031 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#FFF"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"><link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" type="application/rss+xml" href="https://hdqjl317.github.io/rss.xml"><link rel="alternate" type="application/atom+xml" href="https://hdqjl317.github.io/atom.xml"><link rel="alternate" type="application/json" href="https://hdqjl317.github.io/feed.json"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext"><link rel="stylesheet" href="/css/app.css?v=0.2.5"><meta name="keywords" content="分布式系统"><link rel="canonical" href="https://hdqjl317.github.io/2022/10/04/computer-science/Simple-distributed/"><title>Simple_distributed - 计算机科学 | Caleb = = 加楽的小站</title><meta name="generator" content="Hexo 6.3.0"></head><body itemscope itemtype="http://schema.org/WebPage"><div id="loading"><div class="cat"><div class="body"></div><div class="head"><div class="face"></div></div><div class="foot"><div class="tummy-end"></div><div class="bottom"></div><div class="legs left"></div><div class="legs right"></div></div><div class="paw"><div class="hands left"></div><div class="hands right"></div></div></div></div><div id="container"><header id="header" itemscope itemtype="http://schema.org/WPHeader"><div class="inner"><div id="brand"><div class="pjax"><h1 itemprop="name headline">Simple_distributed</h1><div class="meta"><span class="item" title="创建时间：2022-10-04 20:43:08"><span class="icon"><i class="ic i-calendar"></i> </span><span class="text">发表于</span> <time itemprop="dateCreated datePublished" datetime="2022-10-04T20:43:08+08:00">2022-10-04</time> </span><span class="item" title="本文字数"><span class="icon"><i class="ic i-pen"></i> </span><span class="text">本文字数</span> <span>28k</span> <span class="text">字</span> </span><span class="item" title="阅读时长"><span class="icon"><i class="ic i-clock"></i> </span><span class="text">阅读时长</span> <span>26 分钟</span></span></div></div></div><nav id="nav"><div class="inner"><div class="toggle"><div class="lines" aria-label="切换导航栏"><span class="line"></span> <span class="line"></span> <span class="line"></span></div></div><ul class="menu"><li class="item title"><a href="/" rel="start">Caleb</a></li></ul><ul class="right"><li class="item theme"><i class="ic i-sun"></i></li><li class="item search"><i class="ic i-search"></i></li></ul></div></nav></div><div id="imgs" class="pjax"><img src="/assets/fenbushixitong.png"></div></header><div id="waves"><svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"/></defs><g class="parallax"><use xlink:href="#gentle-wave" x="48" y="0"/><use xlink:href="#gentle-wave" x="48" y="3"/><use xlink:href="#gentle-wave" x="48" y="5"/><use xlink:href="#gentle-wave" x="48" y="7"/></g></svg></div><main><div class="inner"><div id="main" class="pjax"><div class="article wrap"><div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList"><i class="ic i-home"></i> <span><a href="/">首页</a></span><i class="ic i-angle-right"></i> <span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/computer-science/" itemprop="item" rel="index" title="分类于 计算机科学"><span itemprop="name">计算机科学</span></a><meta itemprop="position" content="1"></span></div><article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="https://hdqjl317.github.io/2022/10/04/computer-science/Simple-distributed/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.jpg"><meta itemprop="name" content="Caleb"><meta itemprop="description" content="加楽的小站, 欢迎来到 Caleb 的个人博客!"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content=""></span><div class="body md" itemprop="articleBody"><h2 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h2><p>服务进程是在注册中心注册自己的元数据信息，通常包括主机和端口号，有时还有身份验证信息，协议，版本号，以及运行环境的信息</p><p>本系统中包含了以下内容:</p><ol><li>创建Web服务</li><li>创建注册服务</li><li>注册Web服务</li><li>取消注册Web服务</li></ol><h3 id="创建日志服务"><a href="#创建日志服务" class="headerlink" title="创建日志服务"></a>创建日志服务</h3><p>在正式实现服务注册的功能之前，先实现日志服务，在项目文件夹下创建一个log文件夹，存放定义日志逻辑的代码</p><h4 id="编写日志服务逻辑"><a href="#编写日志服务逻辑" class="headerlink" title="编写日志服务逻辑"></a>编写日志服务逻辑</h4><p>日志服务是一个WEB服务，功能是接收web请求，将POST请求的内容写入到log，注意这里对标准的log包起了别名stdlog，因为后续要自定义一个Logger对象log:</p><pre><code class="go">// log/server.go
+package log
+ 
+import (
+    &quot;io/ioutil&quot;
+    stdlog &quot;log&quot;
+    &quot;net/http&quot;
+    &quot;os&quot;
+)
+ 
+var log *stdlog.Logger
+ 
+type fileLog string
+ 
+func (fl fileLog) Write(data []byte) (int, error) &#123;
+    f, err := os.OpenFile(string(fl), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
+    if err != nil &#123;
+        return 0, err
+    &#125;
+    defer f.Close()
+    return f.Write(data)
+&#125;
+ 
+func Run(destination string) &#123;
+    log = stdlog.New(fileLog(destination), &quot;go&quot;, stdlog.LstdFlags)
+&#125;
+ 
+func RegisterHandlers() &#123;
+    http.HandleFunc(&quot;/log&quot;, func(w http.ResponseWriter, r *http.Request) &#123;
+        switch r.Method &#123;
+        case http.MethodPost:
+            msg, err := ioutil.ReadAll(r.Body)  // 读取Body数据
+            if err != nil || len(msg) == 0 &#123;
+                w.WriteHeader(http.StatusBadRequest)
+                return
+            &#125;
+            write(string(msg))
+        default:
+            w.WriteHeader(http.StatusMethodNotAllowed)
+            return
+        &#125;
+    &#125;)
+&#125;
+ 
+func write(message string) &#123;
+    log.Printf(&quot;%v\n&quot;, message)
+&#125;
+</code></pre><p>这段代码的作用是将日志写入文件系统，先为filelog实现io.Writer接口，定义Write方法</p><p>在这个方法中，首先调用了OpenFile方法，传入一个文件路径并返回一个file对象，指定了权限和模式，并随后判断是否产生错误，最后通过io.Writer接口写入文件:</p><pre><code class="go">func (fl fileLog) Write(data []byte) (int, error) &#123;
+    f, err := os.OpenFile(string(fl), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)  // 打开文件
+    if err != nil &#123;
+        return 0, err
+    &#125;
+    defer f.Close()
+    return f.Write(data)
+&#125;
+</code></pre><p>接着定义Run函数，作用是将log指向某个文件路径，使用log.New来创建一个Logger对象，要传入的参数: 写入的位置(实现io.Writer接口)、日志前缀和日志内容的flag(包含了日期和时间)</p><pre><code class="go">func Run(destination string) &#123;
+    log = stdlog.New(fileLog(destination), &quot;go&quot;, stdlog.LstdFlags)
+&#125;
+</code></pre><p>然后注册一个handler:</p><pre><code class="go">func RegisterHandlers() &#123;
+    http.HandleFunc(&quot;/log&quot;, func(w http.ResponseWriter, r *http.Request) &#123;
+        switch r.Method &#123;
+        case http.MethodPost:  // POST请求
+            msg, err := ioutil.ReadAll(r.Body)
+            if err != nil || len(msg) == 0 &#123;
+                w.WriteHeader(http.StatusBadRequest)
+                return
+            &#125;
+            write(string(msg))  // 写入数据
+        default:
+            w.WriteHeader(http.StatusMethodNotAllowed)
+            return
+        &#125;
+    &#125;)
+&#125;
+</code></pre><p>使用了一个http.HandleFunc来处理HTTP请求，使用switch-case结构判断请求方式来分支处理请求，如果是POST请求则调用ioutil.ReadAll读取Body数据，调用write函数(之后实现)写入文件，如果读取失败或者数据为空，则返回一个BadRequest(400)响应。如果接收到的请求不是POST请求，则返回一个MethodNotAllowed响应(405)</p><p>如下是write函数:</p><pre><code class="go">func write(message string) &#123;
+    log.Printf(&quot;%v\n&quot;, message)
+&#125;
+</code></pre><p>调用log.Printf就可以，这里的log是自定义的Logger对象(已经在Run函数中创建)，路径在New方法中指定了，这时就会把日志信息写入所指向的文件中</p><h4 id="运行日志服务"><a href="#运行日志服务" class="headerlink" title="运行日志服务"></a>运行日志服务</h4><p>上述编写的server.go程序作为日志系统的后端，下面编写一段代码，将服务集中化管理，能够集中启动这些服务</p><p>创建一个service目录，并在其中编写service.go文件:</p><pre><code class="go">package service
+ 
+import (
+    &quot;context&quot;
+    &quot;fmt&quot;
+    &quot;log&quot;
+    &quot;net/http&quot;
+)
+ 
+func Start(ctx context.Context, serviceName, host, port string,
+    registerHandlerFunc func()) (context.Context, error) &#123;
+    registerHandlerFunc()  // 注册请求处理函数
+    ctx = startService(ctx, serviceName, host, port)  // 启动服务
+    return ctx, nil
+&#125;
+ 
+func startService(ctx context.Context, serviceName, host, port string) context.Context &#123;
+    ctx, cancel := context.WithCancel(ctx)
+    var srv http.Server
+    srv.Addr = &quot;:&quot; + port
+ 
+    go func() &#123;
+        log.Println(srv.ListenAndServe())  // 监听HTTP请求 调用ServeHTTP方法
+        cancel()
+    &#125;()
+ 
+    go func() &#123;
+        fmt.Printf(&quot;%v started. Press any key to stop. \n&quot;, serviceName)
+        var s string
+        fmt.Scanln(&amp;s)
+        srv.Shutdown(ctx)
+        cancel()
+    &#125;()
+ 
+    return ctx
+&#125;
+</code></pre><p>这段代码定义了一个Start函数，接收context接口，服务名称，地址，端口号，作用是启动指定的服务，先调用了registerHandleFunc注册请求处理函数(服务程序要有一个处理函数，来处理到来的HTTP请求)，随后调用了startService函数，结束时返回context和nil</p><p>在startService函数中调用了WithCancel，返回一个context子节点和一个取消函数，用于触发取消信号，之后调一个goroutine启动HTTP服务器监听在指定的端口，处理到来的HTTP请求，当用户输入按下任意建就会触发Shutdown方法关闭服务器，并且调用取消函数撤销掉context:</p><pre><code class="go">func startService(ctx context.Context, serviceName, host, port string) context.Context &#123;
+    ctx, cancel := context.WithCancel(ctx)
+    var srv http.Server
+    srv.Addr = &quot;:&quot; + port
+ 
+    go func() &#123;
+        log.Println(srv.ListenAndServe())
+        cancel()
+    &#125;()
+ 
+    go func() &#123;
+        fmt.Printf(&quot;%v started. Press any key to stop. \n&quot;, serviceName)
+        var s string
+        fmt.Scanln(&amp;s)
+        srv.Shutdown(ctx)  // 关闭服务器
+        cancel()           // 取消context
+    &#125;()
+ 
+    return ctx
+&#125;
+</code></pre><p>创建一个cmd文件夹，编写main.go作为整个程序的入口:</p><pre><code class="go">package main
+ 
+import (
+    &quot;context&quot;
+    &quot;distributed/log&quot;
+    &quot;distributed/service&quot;
+    &quot;fmt&quot;
+    stdlog &quot;log&quot;
+)
+ 
+func main() &#123;
+    log.Run(&quot;./distributed.log&quot;)        // 指定日志文件路径
+    host, port := &quot;localhost&quot;, &quot;4000&quot;   // 指定地址和端口号
+    ctx, err := service.Start(context.Background(),
+        &quot;Log Service&quot;,
+        host, port,
+        log.RegisterHandlers,
+    )
+ 
+    if err != nil &#123;
+        stdlog.Fatalln(err)
+    &#125;
+    &lt;-ctx.Done()
+ 
+    fmt.Println(&quot;Shutting down log service.&quot;)
+&#125;
+</code></pre><p>这段代码作为入口，启动这个服务</p><p>当取消函数(cancel)被调用后，ctx.Done就不会被阻塞，往下执行完整个程序</p><h4 id="测试日志服务"><a href="#测试日志服务" class="headerlink" title="测试日志服务"></a>测试日志服务</h4><p>使用Postman发出POST请求用于测试，如下所示:</p><p><img data-src="/Simple-distributed/2692436-20220822193149828-290861501.png" alt="img"></p><p>发送请求后，查看日志文件:</p><pre><code class="shell">$ cat distributed.log 
+go 2022/08/22 19:34:08 just for test
+</code></pre><p>日志被记录了下来</p><h3 id="服务注册逻辑"><a href="#服务注册逻辑" class="headerlink" title="服务注册逻辑"></a>服务注册逻辑</h3><p>下面才正式实现注册中心服务注册的功能，应当实现服务注册的接口，这样客户端能够通过这个接口</p><p>创建registry文件夹，编写如下的registration.go文件:</p><pre><code class="go">package registry
+ 
+type Registration struct &#123;
+    ServiceName ServiceName
+    ServiceURL  string
+&#125;
+ 
+type ServiceName string
+ 
+const (
+    LogService = ServiceName(&quot;LogService&quot;)
+)
+</code></pre><p>如上定义的Registration结构体代表被注册的服务，将目前存在服务定义为常量，目前只有一个日志服务LogService</p><p>在这个文件夹下再编写一个server.go，包含服务注册的主要逻辑:</p><pre><code class="go">package registry
+ 
+import (
+    &quot;encoding/json&quot;
+    &quot;log&quot;
+    &quot;net/http&quot;
+    &quot;sync&quot;
+)
+ 
+const ServerPort = &quot;:3000&quot;  // 端口
+const ServicesURL = &quot;http://localhost&quot; + ServerPort + &quot;/services&quot;  // 查询服务的URL
+ 
+type registry struct &#123;
+    registrations []Registration  // 切片
+    mutex         *sync.Mutex     // 互斥锁
+&#125;
+ 
+func (r *registry) add(reg Registration) error &#123;
+    r.mutex.Lock()
+    r.registrations = append(r.registrations, reg)
+    r.mutex.Unlock()
+    return nil
+&#125;
+ 
+var reg = registry&#123;
+    registrations: make([]Registration, 0),
+    mutex:         new(sync.Mutex),
+&#125;
+ 
+type Service struct&#123;&#125;
+ 
+func (s Service) ServeHTTP(w http.ResponseWriter, r *http.Request) &#123;
+    log.Println(&quot;Request received&quot;)
+    switch r.Method &#123;
+    case http.MethodPost:
+        dec := json.NewDecoder(r.Body)
+        var r Registration
+        err := dec.Decode(&amp;r)
+        if err != nil &#123;
+            log.Println(err)
+            w.WriteHeader(http.StatusBadRequest)
+            return
+        &#125;
+        log.Printf(&quot;Adding service: %v with URL: %s\n&quot;, r.ServiceName, r.ServiceURL)
+        err = reg.add(r)
+        if err != nil &#123;
+            log.Println(err)
+            w.WriteHeader(http.StatusBadRequest)
+            return
+        &#125;
+    default:
+        w.WriteHeader(http.StatusMethodNotAllowed)
+        return
+    &#125;
+&#125;
+</code></pre><p>定义了一个结构体registry，包含了两个成员: 一个切片，可以看成是一系列服务的集合，和一个互斥锁，用于并发控制，之后将其创建</p><p>随后定义的add函数作用是注册，在上锁的情况下向集合添加元素，接着定义ServeHTTP函数，只接收POST请求，解析JSON数据，将其中服务名称通过add函数添加到上述创建的Registration结构中的集合中，这就意味着成功注册了一个服务</p><h3 id="独立运行服务注册"><a href="#独立运行服务注册" class="headerlink" title="独立运行服务注册"></a>独立运行服务注册</h3><p>将上述编写的服务注册的程序独立运行起来，将启动日志服务的main.go单独丢进一个cmd下的logservice文件夹，在cmd下创建一个registryservice文件夹，编写对应的main.go文件:</p><pre><code class="go">package main
+ 
+import (
+    &quot;context&quot;
+    &quot;distributed/registry&quot;
+    &quot;fmt&quot;
+    &quot;log&quot;
+    &quot;net/http&quot;
+)
+ 
+func main() &#123;
+    http.Handle(&quot;/services&quot;, &amp;registry.Service&#123;&#125;)
+ 
+    ctx, cancel := context.WithCancel(context.Background())
+    defer cancel()
+ 
+    var srv http.Server
+    srv.Addr = registry.ServerPort
+ 
+    go func() &#123;
+        log.Println(srv.ListenAndServe())
+        var s string
+        fmt.Scanln(&amp;s)
+        srv.Shutdown(ctx)
+        cancel()
+    &#125;()
+ 
+    &lt;-ctx.Done()
+    fmt.Println(&quot;Shutting down registry service&quot;)
+&#125;
+</code></pre><p>这段代码的作用就是将服务注册程序给运行起来，registry.Service已经实现了ServeHTTP接口方法，因此可以直接将这个结构体变量传给http.Handle函数</p><p>这段代码与上述service.go有点相似，在用户输入任意字符后中止掉程序</p><h3 id="注册一个服务"><a href="#注册一个服务" class="headerlink" title="注册一个服务"></a>注册一个服务</h3><p>封装一个函数向服务端发送POST请求来注册一个服务，在registry下编写一个client.go文件:</p><pre><code class="go">package registry
+ 
+import (
+    &quot;bytes&quot;
+    &quot;encoding/json&quot;
+    &quot;fmt&quot;
+    &quot;net/http&quot;
+)
+ 
+func RegisterService(r Registration) error &#123;
+    buf := new(bytes.Buffer)
+    enc := json.NewEncoder(buf)
+    err := enc.Encode(r)
+    if err != nil &#123;
+        return err
+    &#125;
+    res, err := http.Post(ServicesURL, &quot;application/json&quot;, buf)
+    if err != nil &#123;
+        return err
+    &#125;
+ 
+    if res.StatusCode != http.StatusOK &#123;
+        return fmt.Errorf(&quot;failed to register service. Registry service &quot;+
+            &quot;responded with code %v&quot;, res.StatusCode)
+    &#125;
+    return nil
+&#125;
+</code></pre><p>上述代码中定义了一个RegisterService函数，向URL发送POST请求来注册服务，请求中包括了服务名称和服务的URL</p><p>接下来要修改之前的代码，因为发送的数据是Registration结构体类型的数据，而上述编写的服务注册的服务端须要更改参数类型，修改service&#x2F;service.go文件，这里在Start函数中加上Registration结构体类型的参数，serviceName这个参数可以删掉，并且启动这个服务时应该进行注册，所以在该函数中加上RegisterService函数:</p><pre><code class="go">func Start(ctx context.Context, host, port string, reg registry.Registration,
+    registerHandlerFunc func()) (context.Context, error) &#123;
+    registerHandlerFunc()
+    ctx = startService(ctx, reg.ServiceName, host, port)
+    err := registry.RegisterService(reg)  // 注册服务
+    if err != nil &#123;
+        return ctx, err
+    &#125;
+    return ctx, nil
+&#125;
+</code></pre><p>同时一并修改startService函数的参数:</p><pre><code class="go">func startService(ctx context.Context, serviceName registry.ServiceName, host, port string) context.Context &#123;
+    ctx, cancel := context.WithCancel(ctx)
+    var srv http.Server
+    srv.Addr = &quot;:&quot; + port
+ 
+    go func() &#123;
+        log.Println(srv.ListenAndServe())
+        cancel()
+    &#125;()
+ 
+    go func() &#123;
+        fmt.Printf(&quot;%v started. Press any key to stop. \n&quot;, serviceName)
+        var s string
+        fmt.Scanln(&amp;s)
+        srv.Shutdown(ctx)
+        cancel()
+    &#125;()
+ 
+    return ctx
+&#125;
+</code></pre><p>最后要修改logservice中的main.go，因为函数已经被修改:</p><pre><code class="go">....
+serviceAddress := fmt.Sprintf(&quot;http://%s:%s&quot;, host, port)
+ 
+r := registry.Registration&#123;
+    ServiceName: &quot;Log Service&quot;,
+    ServiceURL:  serviceAddress,
+&#125;
+ctx, err := service.Start(context.Background(),
+    &quot;Log Service&quot;,
+    host, port, r, log.RegisterHandlers,
+)
+....
+</code></pre><p>接下来运行这个服务，先启动registryservice&#x2F;main.go，启动服务注册的程序，在运行logservice&#x2F;main.go，这时会先发送一条POST请求到服务注册的程序，这时服务注册程序收到这条请求，其中包含了服务名称和URL，服务注册程序将其添加到集合，视为注册了这个服务:</p><pre><code class="shell">$ go run .
+2022/08/23 13:40:24 Request received
+2022/08/23 13:40:24 Adding service: Log Service with URL: http://localhost:4000
+</code></pre><p>这时服务注册程序输出已经添加了日志服务</p><h3 id="取消注册服务"><a href="#取消注册服务" class="headerlink" title="取消注册服务"></a>取消注册服务</h3><p>有增就有减，对应地，有服务注册的功能就应该有取消注册的功能</p><p>在registry&#x2F;server.go中添加remove函数，与add函数作用相反，作用是从集合中去除掉指定的url所在的registration:</p><pre><code class="go">func (r *registry) remove(url string) error &#123;
+    for i := range reg.registrations &#123;
+        if reg.registrations[i].ServiceURL == url &#123;
+            r.mutex.Lock()
+            reg.registrations = append(reg.registrations[:i], r.registrations[i+1:]...)
+            r.mutex.Unlock()
+            return nil
+        &#125;
+    &#125;
+    return fmt.Errorf(&quot;service at URL %s not found&quot;, url)
+&#125;
+</code></pre><p>使用for-range遍历reg中的切片，当遇到指定的URL时则将其去除</p><p>服务注册中，POST请求用于注册服务，那么将通过DELETE请求来取消服务，所以在ServeHTTP函数中添加一个针对DELETE请求的分支:</p><pre><code class="go">func (s Service) ServeHTTP(w http.ResponseWriter, r *http.Request) &#123;
+    log.Println(&quot;Request received&quot;)
+    switch r.Method &#123;
+    ...
+    case http.MethodDelete:
+        payload, err := ioutil.ReadAll(r.Body)
+        if err != nil &#123;
+            log.Println(err)
+            w.WriteHeader(http.StatusInternalServerError)
+            return
+        &#125;
+        url := string(payload)
+        log.Printf(&quot;Removing servcice at URL: %s&quot;, url)
+        err = reg.remove(url)
+    default:
+        w.WriteHeader(http.StatusMethodNotAllowed)
+        return
+    &#125;
+&#125;
+</code></pre><p>在这个服务端接收到DELETE请求后，取出其中body的URL，再调用remove函数进行删除</p><p>在registry&#x2F;client.go中添加客户端用来取消服务的函数:</p><pre><code class="go">func ShutdownService(url string) error &#123;
+    req, err := http.NewRequest(http.MethodDelete, ServicesURL, bytes.NewBuffer([]byte(url)))
+    if err != nil &#123;
+        return err
+    &#125;
+    req.Header.Add(&quot;Content-Type&quot;, &quot;text/plain&quot;)
+    res, err := http.DefaultClient.Do(req)
+    if err != nil &#123;
+        return err
+    &#125;
+    if res.StatusCode != http.StatusOK &#123;
+        return fmt.Errorf(&quot;failed to deregister service. Registry &quot;+
+            &quot;service responded with code %v&quot;, res.StatusCode)
+    &#125;
+    return nil
+&#125;
+</code></pre><p>使用http.NewRequest来发送DELETE请求</p><p>在StartService函数中，当服务停止时，调用该shutdown函数向服务端发送DELETE请求取消掉这个服务</p><pre><code class="go">func startService(ctx context.Context, serviceName registry.ServiceName, host, port string) context.Context &#123;
+    ...
+    go func() &#123;
+        log.Println(srv.ListenAndServe())
+        err := registry.ShutdownService(fmt.Sprintf(&quot;http://%s:%s&quot;, host, port))
+        if err != nil &#123;
+            log.Println(err)
+        &#125;
+        cancel()
+    &#125;()
+    ...
+&#125;
+</code></pre><p>测试:</p><p>先启动服务注册程序，然后再启动日志服务，再按任意键关闭</p><p>日志服务:</p><pre><code class="shell">$ go run .
+Log Service started. Press any key to stop. 
+ 
+2022/08/23 16:45:44 http: Server closed
+Shutting down log service.
+</code></pre><p>服务注册程序:</p><pre><code class="shell">$ go run .
+2022/08/23 16:45:42 Request received
+2022/08/23 16:45:42 Adding service: Log Service with URL: http://localhost:4000
+2022/08/23 16:45:44 Request received
+2022/08/23 16:45:44 Removing servcice at URL: http://localhost:4000
+2022/08/23 16:45:44 Request received
+2022/08/23 16:45:44 Removing servcice at URL: http://localhost:4000
+</code></pre><h2 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h2><p>在此之前，先实现一个业务服务，功能是学生成绩管理，用户可以查询和增加学生的成绩信息</p><h3 id="创建业务服务"><a href="#创建业务服务" class="headerlink" title="创建业务服务"></a>创建业务服务</h3><p>创建一个grades文件夹，编写相关代码，如下是grades.go文件，包含了成绩信息管理的主要逻辑:</p><pre><code class="go">package grades
+ 
+import (
+    &quot;fmt&quot;
+    &quot;sync&quot;
+)
+ 
+type Student struct &#123;
+    ID        int
+    FirstName string
+    LastName  string
+    Grades    []Grade
+&#125;
+ 
+func (s Student) Average() float32 &#123;
+    var result float32
+    for _, grade := range s.Grades &#123;
+        result += grade.Score
+    &#125;
+    return result / float32(len(s.Grades))
+&#125;
+ 
+type Students []Student
+ 
+var (
+    students      Students
+    studentsMutex sync.Mutex
+)
+ 
+func (ss Students) GetByID(id int) (*Student, error) &#123;
+    for i := range ss &#123;
+        if ss[i].ID == id &#123;
+            return &amp;ss[i], nil
+        &#125;
+    &#125;
+    return nil, fmt.Errorf(&quot;student with ID %d not found&quot;, id)
+&#125;
+ 
+type GradeType string
+ 
+const (
+    GradeQuiz = GradeType(&quot;Quiz&quot;)
+    GradeTest = GradeType(&quot;Test&quot;)
+    GradeExam = GradeType(&quot;Exam&quot;)
+)
+ 
+type Grade struct &#123;
+    Title string
+    Type  GradeType
+    Score float32
+&#125;
+</code></pre><p>定义了students结构体，表示了学生信息:</p><pre><code class="go">type Student struct &#123;
+    ID        int     // 学生ID
+    FirstName string  // 名
+    LastName  string  // 姓
+    Grades    []Grade // 成绩
+&#125;
+</code></pre><p>定义了grade结构体:</p><pre><code class="go">type Grade struct &#123;
+    Title string       // 名称
+    Type  GradeType    // 类别
+    Score float32      // 得分
+&#125;
+</code></pre><p>GetByID用于根据ID来查询学生信息，Average用于求平均成绩</p><p>创建server.go文件，作为该服务的后端，之后会被services中的Start函数调用:</p><pre><code class="go">package grades
+ 
+import (
+    &quot;bytes&quot;
+    &quot;encoding/json&quot;
+    &quot;fmt&quot;
+    &quot;log&quot;
+    &quot;net/http&quot;
+    &quot;strconv&quot;
+    &quot;strings&quot;
+)
+ 
+func RegisterHandlers() &#123;
+    handler := new(studentsHandler)
+    http.Handle(&quot;/students&quot;, handler)
+    http.Handle(&quot;/students/&quot;, handler)
+&#125;
+ 
+type studentsHandler struct&#123;&#125;
+ 
+func (sh studentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) &#123;
+    pathSegments := strings.Split(r.URL.Path, &quot;/&quot;)
+    switch len(pathSegments) &#123;
+    case 2:
+        sh.getAll(w, r)
+    case 3:
+        id, err := strconv.Atoi(pathSegments[2])
+        if err != nil &#123;
+            w.WriteHeader(http.StatusNotFound)
+            return
+        &#125;
+        sh.getOne(w, r, id)
+    case 4:
+        id, err := strconv.Atoi(pathSegments[2])
+        if err != nil &#123;
+            w.WriteHeader(http.StatusNotFound)
+            return
+        &#125;
+        sh.addGrade(w, r, id)
+    default:
+        w.WriteHeader(http.StatusNotFound)
+    &#125;
+&#125;
+ 
+func (sh studentsHandler) getAll(w http.ResponseWriter, r *http.Request) &#123;
+    studentsMutex.Lock()
+    defer studentsMutex.Unlock()
+ 
+    data, err := sh.toJSON(students)
+    if err != nil &#123;
+        w.WriteHeader(http.StatusInternalServerError)
+        log.Println(err)
+        return
+    &#125;
+    w.Header().Add(&quot;Content-Type&quot;, &quot;application/json&quot;)
+    w.Write(data)  // 写回数据
+&#125;
+ 
+func (sh studentsHandler) toJSON(obj interface&#123;&#125;) ([]byte, error) &#123;
+    var b bytes.Buffer
+    enc := json.NewEncoder(&amp;b)
+    err := enc.Encode(obj)
+    if err != nil &#123;
+        return nil, fmt.Errorf(&quot;failed to serialize students: %q&quot;, err)
+    &#125;
+    return b.Bytes(), nil
+&#125;
+ 
+func (sh studentsHandler) getOne(w http.ResponseWriter, r *http.Request, id int) &#123;
+    studentsMutex.Lock()
+    defer studentsMutex.Unlock()
+ 
+    student, err := students.GetByID(id)
+    if err != nil &#123;
+        w.WriteHeader(http.StatusNotFound)
+        log.Println(err)
+        return
+    &#125;
+ 
+    data, err := sh.toJSON(student)
+    if err != nil &#123;
+        w.WriteHeader(http.StatusInternalServerError)
+        log.Printf(&quot;Failed to serialize student: %q\n&quot;, err)
+        return
+    &#125;
+    w.Header().Add(&quot;Content-Type&quot;, &quot;application/json&quot;)
+    w.Write(data)
+&#125;
+ 
+func (sh studentsHandler) addGrade(w http.ResponseWriter, r *http.Request, id int) &#123;
+    studentsMutex.Lock()
+    defer studentsMutex.Unlock()
+ 
+    student, err := students.GetByID(id)
+    if err != nil &#123;
+        w.WriteHeader(http.StatusNotFound)
+        log.Println(err)
+        return
+    &#125;
+    var g Grade
+    dec := json.NewDecoder(r.Body)
+    err = dec.Decode(&amp;g)
+    if err != nil &#123;
+        w.WriteHeader(http.StatusBadRequest)
+        log.Println(err)
+        return
+    &#125;
+    student.Grades = append(student.Grades, g)  // 添加数据
+    w.WriteHeader(http.StatusCreated)
+    data, err := sh.toJSON(g)
+    if err != nil &#123;
+        log.Println(err)
+        return
+    &#125;
+    w.Header().Add(&quot;Content-Type&quot;, &quot;application/json&quot;)
+    w.Write(data)
+&#125;
+</code></pre><p>使用RegisterHandlers注册http handler，路径指向URL下的students，会作为Start函数的参数</p><p>作为一个服务，同样要为结构体定义一个接口方法ServeHTTP，该方法要应对URL的几种情况:</p><ol><li><code>/students</code> 获得所有学生的成绩</li><li><code>/students/&#123;id&#125;</code> 获得指定ID的学生的信息</li><li><code>/students/&#123;id&#125;/grades</code>获得增加学生的成绩</li></ol><p>使用string.Split将URL路径切分为多段，使用switch-case结构根据分段的个数进行分支处理，段数为2、3和4分别对应了上述3种情况，分别调用getAll、getOne和addGrade函数，实现细节不再赘述</p><p>这里还要定义一个将结构体序列化为JSON数据的函数，接收一个空接口:</p><pre><code class="go">func (sh studentsHandler) toJSON(obj interface&#123;&#125;) ([]byte, error) &#123;
+    var b bytes.Buffer
+    enc := json.NewEncoder(&amp;b)
+    err := enc.Encode(obj)
+    if err != nil &#123;
+        return nil, fmt.Errorf(&quot;failed to serialize students: %q&quot;, err)
+    &#125;
+    return b.Bytes(), nil
+&#125;
+</code></pre><p>编写一个mockdata.go文件，制造一些数据:</p><pre><code class="go">package grades
+ 
+func init() &#123;
+    students = []Student&#123;
+        &#123;
+            ID:        1,
+            FirstName: &quot;Nick&quot;,
+            LastName:  &quot;Carter&quot;,
+            Grades: []Grade&#123;
+                &#123;
+                    &quot;Quiz 1&quot;,
+                    GradeQuiz,
+                    85,
+                &#125;,
+                &#123;
+                    &quot;Final Exam&quot;,
+                    GradeExam,
+                    94,
+                &#125;,
+                &#123;
+                    &quot;Quiz 2&quot;,
+                    GradeQuiz,
+                    97,
+                &#125;,
+            &#125;,
+        &#125;,
+        &#123;
+            ID:        2,
+            FirstName: &quot;Jack&quot;,
+            LastName:  &quot;Bright&quot;,
+            Grades: []Grade&#123;
+                &#123;
+                    &quot;Final Exam&quot;,
+                    GradeExam,
+                    100,
+                &#125;,
+                &#123;
+                    &quot;Quiz 2&quot;,
+                    GradeQuiz,
+                    80,
+                &#125;,
+                &#123;
+                    &quot;Test 1&quot;,
+                    GradeTest,
+                    99,
+                &#125;,
+            &#125;,
+        &#125;,
+    &#125;
+&#125;
+</code></pre><p>这样一个业务服务就完成了，添加到registry&#x2F;registrantion.go中:</p><pre><code class="go">const (
+    LogService     = ServiceName(&quot;LogService&quot;)
+    GradingService = ServiceName(&quot;GradingService&quot;)  // 业务服务
+)
+</code></pre><p>和日志服务相似，创建cmd&#x2F;gradingservice&#x2F;main.go文件，编写启动代码:</p><pre><code class="go">package main
+ 
+import (
+    &quot;context&quot;
+    &quot;distributed/log&quot;
+    &quot;distributed/registry&quot;
+    &quot;distributed/service&quot;
+    &quot;fmt&quot;
+    stdlog &quot;log&quot;
+)
+ 
+func main() &#123;
+    log.Run(&quot;./distributed.log&quot;)
+    host, port := &quot;localhost&quot;, &quot;6000&quot;
+    serviceAddress := fmt.Sprintf(&quot;http://%s:%s&quot;, host, port)
+ 
+    r := registry.Registration&#123;
+        ServiceName: registry.GradingService,
+        ServiceURL:  serviceAddress,
+    &#125;
+    ctx, err := service.Start(context.Background(),
+        host, port, r, log.RegisterHandlers,
+    )
+ 
+    if err != nil &#123;
+        stdlog.Fatalln(err)
+    &#125;
+    &lt;-ctx.Done()
+ 
+    fmt.Println(&quot;Shutting down grading service.&quot;)
+&#125;
+</code></pre><p>服务注册到这里就基本实现了，如下是项目结构:</p><pre><code class="shell">.
+├── cmd
+│   ├── gradingservice
+│   │   └── main.go
+│   ├── logservice
+│   │   └── main.go
+│   └── registryservice
+│       └── main.go
+├── log
+│   └── server.go
+├── registry
+│   ├── client.go
+│   ├── registration.go
+│   └── server.go
+└── service
+    └── service.go
+</code></pre><h3 id="实现服务发现"><a href="#实现服务发现" class="headerlink" title="实现服务发现"></a>实现服务发现</h3><p>完成了上述的业务服务gradingservice后，要使其能够请求logservice</p><p>接下来编辑registry&#x2F;registration.go文件，扩展Registration结构体:</p><pre><code class="go">type Registration struct &#123;
+    ServiceName      ServiceName
+    ServiceURL       string
+    RequiredServices []ServiceName
+    ServiceUpdateURL string
+&#125;
+</code></pre><p>RequiredServices表示了该服务所依赖的服务名称，ServiceUpdateURL用于动态接收更新，比如注册中心就通过这个URL告诉这个服务，这里有一个logservice</p><p>创建两个结构体:</p><pre><code class="go">type patchEntry struct &#123;
+    Name ServiceName
+    URL  string
+&#125;
+</code></pre><p>该结构体表示单条更新条目</p><pre><code class="go">type patch struct &#123;
+    Added   []patchEntry
+    Removed []patchEntry
+&#125;
+</code></pre><p>该结构体记录增加和减少的条目</p><p>编写registry&#x2F;server.go，扩展注册中心的后端，先扩展add函数，在添加服务时就添加为其依赖服务:</p><pre><code class="go">func (r *registry) add(reg Registration) error &#123;
+    r.mutex.Lock()
+    r.registrations = append(r.registrations, reg)
+    r.mutex.Unlock()
+    err := r.sendRequiredServices(reg)
+    if err != nil &#123;
+        return err
+    &#125;
+    return nil
+&#125;
+</code></pre><p>调用了一个sendRequiredServices函数，功能是添加依赖，发送一个请求，将所要依赖的服务给请求过来，方法实现如下:</p><pre><code class="go">func (r *registry) sendRequiredServices(reg Registration) error &#123;
+    r.mutex.RLock()
+    defer r.mutex.RUnlock()
+ 
+    var p patch
+    for _, serviceReg := range r.registrations &#123;
+        for _, reqService := range reg.RequiredServices &#123;
+            if serviceReg.ServiceName == reqService &#123;
+                p.Added = append(p.Added, patchEntry&#123;
+                    Name: serviceReg.ServiceName,
+                    URL:  serviceReg.ServiceURL,
+                &#125;)
+            &#125;
+        &#125;
+    &#125;
+    err := r.sendPatch(p, reg.ServiceUpdateURL)
+    return err
+&#125;
+</code></pre><p>上述函数中，循环遍历已经注册的服务，如果找到所依赖的服务，则添加到切片里，稍后调用sendPatch发送出去，实现如下:</p><pre><code class="go">func (r *registry) sendPatch(p patch, url string) error &#123;
+    d, err := json.Marshal(p)
+    if err != nil &#123;
+        return err
+    &#125;
+    _, err = http.Post(url, &quot;application/json&quot;, bytes.NewBuffer(d))
+    return err
+&#125;
+</code></pre><p>该函数先将patch结构序列化为一个JSON数据，然后放在POST请求中发送</p><p>每个客户端的服务都有所依赖的服务，要向注册中心请求这些服务，得存储这些请求的服务，比如gradingservice就要依赖logservice</p><p>定义一个结构providers:</p><pre><code class="go">type providers struct &#123;
+    services map[ServiceName][]string
+    mutex    *sync.RWMutex
+&#125;
+</code></pre><p>其中储存了服务的提供者，定义了一个map结构，和一个读写锁</p><p>初始化这个结构体变量:</p><pre><code class="go">var prov = providers&#123;
+    services: make(map[ServiceName][]string),
+    mutex:    new(sync.RWMutex),
+&#125;
+</code></pre><p>定义对于的更新方法，用于更新这个结构中的数据:</p><pre><code class="go">func (p *providers) Update(pat patch) &#123;
+    p.mutex.Lock()
+    defer p.mutex.Unlock()
+ 
+    for _, patchEntry := range pat.Added &#123;
+        if _, ok := p.services[patchEntry.Name]; !ok &#123;
+            p.services[patchEntry.Name] = make([]string, 0)
+        &#125;
+        p.services[patchEntry.Name] = append(p.services[patchEntry.Name], patchEntry.URL)
+    &#125;
+    for _, patchEntry := range pat.Removed &#123;
+        if providerURLs, ok := p.services[patchEntry.Name]; ok &#123;
+            for i := range providerURLs &#123;
+                if providerURLs[i] == patchEntry.URL &#123;
+                    p.services[patchEntry.Name] = append(providerURLs[:i], providerURLs[i+1:]...)
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre><p>先遍历Added，也就是patch要增加的服务，如果added里的服务在providers中还不存在，则创建这个service，然后将这个服务和对应URL写入map，同理，接着遍历Removed，已有的服务就将其删除</p><p>接着定义了一个get函数，通过服务名称找到对应的URL:</p><pre><code class="go">func (p *providers) get(name ServiceName) (string, error) &#123;
+    providers, ok := p.services[name]
+    if !ok &#123;
+        return &quot;&quot;, fmt.Errorf(&quot;no providers avaliable for service %v&quot;, name)
+    &#125;
+    idx := int(rand.Float32() * float32(len(providers)))
+    return providers[idx], nil
+&#125;
+ 
+func GetProvider(name ServiceName) (string, error) &#123;
+    return prov.get(name)
+&#125;
+</code></pre><p>目前providers只有logservice</p><p>接着再将ServiceUpdateURL绑定到一个handler上，从而能够对其进行处理:</p><pre><code class="go">func RegisterService(r Registration) error &#123;
+    serviceUpdateURL, err := url.Parse(r.ServiceUpdateURL)
+    if err != nil &#123;
+        return err
+    &#125;
+    http.Handle(serviceUpdateURL.Path, &amp;serviceUpdateHandler&#123;&#125;)
+    ....
+&#125;
+</code></pre><p>定义接口方法:</p><pre><code class="go">type serviceUpdateHandler struct&#123;&#125;
+ 
+func (suh serviceUpdateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) &#123;
+    if r.Method != http.MethodPost &#123;
+        w.WriteHeader(http.StatusMethodNotAllowed)
+        return
+    &#125;
+    dec := json.NewDecoder(r.Body)
+    var p patch
+    err := dec.Decode(&amp;p)
+    if err != nil &#123;
+        log.Println(err)
+        w.WriteHeader(http.StatusBadGateway)
+    &#125;
+    prov.Update(p)
+&#125;
+</code></pre><p>ServeHTTP中接收POST请求，将Body到数据反序列化后传入Update方法再调用</p><p>因为经过了一些扩展，所以要修改Registration，增加所要依赖的服务和URL字段</p><pre><code class="go">type Registration struct &#123;
+    ServiceName      ServiceName
+    ServiceURL       string
+    RequiredServices []ServiceName
+    ServiceUpdateURL string
+&#125;
+</code></pre><p>下面优化一下logservice，目前日志服务只有一个服务端，要让客户端能够方便地使用提供的logservice服务，在log下再编写一个client.go文件:</p><pre><code class="go">package log
+ 
+import (
+    &quot;bytes&quot;
+    &quot;distributed/registry&quot;
+    &quot;fmt&quot;
+    stdlog &quot;log&quot;
+    &quot;net/http&quot;
+)
+ 
+func SetClientLogger(serviceURL string, clientService registry.ServiceName) &#123;
+    stdlog.SetPrefix(fmt.Sprintf(&quot;[%v] - &quot;, clientService))
+    stdlog.SetFlags(0)  // 不设置flag
+    stdlog.SetOutput(&amp;clientLogger&#123;serviceURL&#125;)
+&#125;
+ 
+type clientLogger struct &#123;
+    url string
+&#125;
+ 
+func (cl clientLogger) Write(data []byte) (n int, err error) &#123;
+    b := bytes.NewBuffer([]byte(data))
+    res, err := http.Post(cl.url+&quot;/log&quot;, &quot;text/plain&quot;, b)
+    if err != nil &#123;
+        return 0, err
+    &#125;
+    if res.StatusCode != http.StatusOK &#123;
+        return 0, fmt.Errorf(&quot;failed to send log message. &quot;)
+    &#125;
+    return len(data), nil
+&#125;
+</code></pre><p>SetClientLogger负责设置客户端日志打印的相关的属性，因为要为clientLogger实现io.Writer接口，所以下面为其实现一个Write方法</p><p>扩展gradingservice&#x2F;main.go中结构体的定义:</p><pre><code class="go">r := registry.Registration&#123;
+    ServiceName:      registry.GradingService,
+    ServiceURL:       serviceAddress,
+    RequiredServices: []registry.ServiceName&#123;registry.LogService&#125;,
+    ServiceUpdateURL: serviceAddress + &quot;/services&quot;,
+&#125;
+</code></pre><p>logservice同时接着还要获取Provider，即获取提供日志的服务的名称，这便是服务发现</p><pre><code class="go">if logProvider, err := registry.GetProvider(registry.LogService); err == nil &#123;
+    fmt.Printf(&quot;Logging service found at: %s\n&quot;, logProvider)
+    log.SetClientLogger(logProvider, r.ServiceName)
+&#125;
+</code></pre><p>运行测试:</p><p>先运行注册中心</p><pre><code class="shell">$ go run .
+2022/08/24 13:03:05 Request received
+2022/08/24 13:03:05 Adding service: LogService with URL: http://localhost:4000
+2022/08/24 13:03:21 Request received
+2022/08/24 13:03:21 Adding service: GradingService with URL: http://localhost:6000
+</code></pre><p>运行日志服务</p><pre><code class="shell">$ go run .
+LogService started. Press any key to stop. 
+</code></pre><p>运行gradding服务</p><pre><code class="shell">$ go run .
+GradingService started. Press any key to stop. 
+Logging service found at: http://localhost:4000
+</code></pre><h3 id="服务更新"><a href="#服务更新" class="headerlink" title="服务更新"></a>服务更新</h3><p>对于一个服务，当所依赖的服务发生变化时，应当发出通知，例如logservice，当这个服务停止时，应该发出一条通知来告知gradingservice，启动时也应当发出一条通知，在上面的实现中，gradingservice只能在启动时发现logservice，并且logservice要先于gradingservice启动</p><p>在服务启动时就应该进行通知，所以在add函数中添加一个通知函数:</p><pre><code class="go">func (r *registry) add(reg Registration) error &#123;
+    ....
+    err := r.sendRequiredServices(reg)
+    r.notify(patch&#123;
+        Added: []patchEntry&#123;
+            &#123;
+                Name: reg.ServiceName,
+                URL:  reg.ServiceURL,
+            &#125;,
+        &#125;,
+    &#125;)
+    return err
+&#125;
+</code></pre><p>通知函数的实现:</p><pre><code class="go">func (r *registry) notify(fullPatch patch) &#123;
+    r.mutex.RLock()
+    defer r.mutex.RUnlock()
+    
+    for _, reg := range r.registrations &#123;
+        go func(reg Registration) &#123;
+            for _, reqService := range reg.RequiredServices &#123;
+                p := patch&#123;
+                    Added:   []patchEntry&#123;&#125;,
+                    Removed: []patchEntry&#123;&#125;,
+                &#125;
+                sendUpdate := false
+                for _, added := range fullPatch.Added &#123;
+                    if added.Name == reqService &#123;
+                        p.Added = append(p.Added, added)
+                        sendUpdate = true
+                    &#125;
+                &#125;
+                for _, removed := range fullPatch.Removed &#123;
+                    if removed.Name == reqService &#123;
+                        p.Removed = append(p.Removed, removed)
+                        sendUpdate = true
+                    &#125;
+                &#125;
+                if sendUpdate &#123;
+                    err := r.sendPatch(p, reg.ServiceUpdateURL)  // 发送patch
+                    if err != nil &#123;
+                        log.Println(err)
+                        return
+                    &#125;
+                &#125;
+            &#125;
+        &#125;(reg)
+    &#125;
+&#125;
+</code></pre><p>这个notify函数接收一个patch变量作为参数，其中包含的added和removed，对应增加和移除的服务，函数体中要做的事就是先遍历所有的服务，然后遍历其所有的依赖服务，根据传入的fullPatch和added和removed，如果依赖服务是要增加或移除的，则将sendUpdate标志设置为true，产生patch并发送，进行更新，这些流程使用goroutine来并发地进行</p><p>在registry&#x2F;client.go的ServeHTTP函数中增加一句提示信息，表示接收到了更新:</p><pre><code class="go">func (suh serviceUpdateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) &#123;
+    ....
+    fmt.Printf(&quot;Updated received %v\n&quot;, p)
+    prov.Update(p)
+&#125;
+</code></pre><p>对remove函数同样要进行扩展:</p><pre><code class="go">func (r *registry) remove(url string) error &#123;
+    for i := range reg.registrations &#123;
+        if reg.registrations[i].ServiceURL == url &#123;
+            r.notify(patch&#123;
+                Removed: []patchEntry&#123;
+                    &#123;
+                        Name: r.registrations[i].ServiceName,
+                        URL:  r.registrations[i].ServiceURL,
+                    &#125;,
+                &#125;,
+            &#125;)
+    ...
+    return fmt.Errorf(&quot;service at URL %s not found&quot;, url)
+&#125;
+</code></pre><p>运行测试: 先运行注册中心，然后运行logservice，然后运行gradingservice，之后关闭logservice再启动</p><p>注册中心:</p><pre><code class="shell">$ go run .
+2022/08/24 18:03:45 Request received
+2022/08/24 18:03:45 Adding service: LogService with URL: http://localhost:4000
+2022/08/24 18:03:50 Request received
+2022/08/24 18:03:50 Adding service: GradingService with URL: http://localhost:6000
+2022/08/24 18:03:53 Request received
+2022/08/24 18:03:53 Removing servcice at URL: http://localhost:4000
+2022/08/24 18:03:53 Request received
+2022/08/24 18:03:53 Removing servcice at URL: http://localhost:4000
+2022/08/24 18:04:12 Request received
+2022/08/24 18:04:12 Adding service: LogService with URL: http://localhost:4000
+</code></pre><p>日志服务:</p><pre><code class="shell">$ go run .
+LogService started. Press any key to stop. 
+Updated received &#123;[] []&#125;
+ 
+2022/08/24 18:03:53 http: Server closed
+Shutting down log service.
+$ go run .
+LogService started. Press any key to stop. 
+Updated received &#123;[] []&#125;
+</code></pre><p>grading服务:</p><pre><code class="shell">$ go run .
+GradingService started. Press any key to stop. 
+Updated received &#123;[&#123;LogService http://localhost:4000&#125;] []&#125;
+Logging service found at: http://localhost:4000
+Updated received &#123;[] [&#123;LogService http://localhost:4000&#125;]&#125;
+Updated received &#123;[&#123;LogService http://localhost:4000&#125;] []&#125;
+</code></pre><h2 id="服务状态监控"><a href="#服务状态监控" class="headerlink" title="服务状态监控"></a>服务状态监控</h2><p>检查所有服务的健康状况，方法是发送心跳请求，得知服务是否能正常响应</p><p>在Registration中加一条HeartbeatURL:</p><pre><code class="go">type Registration struct &#123;
+    ServiceName      ServiceName
+    ServiceURL       string
+    RequiredServices []ServiceName
+    ServiceUpdateURL string
+    HeartbeatURL     string
+&#125;
+</code></pre><p>增加心跳检查函数:</p><pre><code class="go">func (r *registry) heartbeat(freq time.Duration) &#123;
+    for &#123;
+        var wg sync.WaitGroup
+        for _, reg := range r.registrations &#123;
+            wg.Add(1)
+            go func(reg Registration) &#123;
+                defer wg.Done()
+                success := true
+                for attemps := 0; attemps &lt; 3; attemps++ &#123;
+                    res, err := http.Get(reg.HeartbeatURL)
+                    if err != nil &#123;
+                        log.Println(err)
+                    &#125; else if res.StatusCode == http.StatusOK &#123;
+                        log.Printf(&quot;Heartbeat check passed for %v&quot;, reg.ServiceName)
+                        if !success &#123;
+                            r.add(reg)
+                        &#125;
+                        break
+                    &#125;
+                    log.Printf(&quot;Heartbeat check failed for %v&quot;, reg.ServiceName)
+                    if success &#123;
+                        success = false
+                        r.remove(reg.ServiceURL)
+                    &#125;
+                &#125;
+            &#125;(reg)
+            wg.Wait()
+            time.Sleep(freq)
+        &#125;
+    &#125;
+&#125;
+</code></pre><p>上述代码中用到了waitgroup和goroutine，对每个服务的HeartbeatURL间隔freq的时间发起get请求，连续发送三次，如果有一次失败(状态码不等于200)，那么success为false，那么会调用remove来移除服务，如果success为false又得到了正常的相应，那么又会调用add将服务加回来</p><p>上述这段代码将会在如下函数中调用，将其定义在registry&#x2F;server.go中，每隔3秒检查一次服务健康状况:</p><pre><code class="go">var once sync.Once
+ 
+func SetupRegistryService() &#123;
+    once.Do(func() &#123;
+        go reg.heartbeat(3 * time.Second)
+    &#125;)
+&#125;
+</code></pre><p>与此同时，所有的客户端都应该知道如何相应这种心跳请求:</p><pre><code class="go">func RegisterService(r Registration) error &#123;
+    heartbeatURL, err := url.Parse(r.HeartbeatURL)
+    if err != nil &#123;
+        return err
+    &#125;
+    http.HandleFunc(heartbeatURL.Path, func(w http.ResponseWriter, r *http.Request) &#123;
+        w.WriteHeader(http.StatusOK)
+    &#125;)
+    ....
+&#125;
+</code></pre><p>在服务注册时，就在心跳URL注册一个handler，处理心跳请求，最后为logservice和gradingservice都加上心跳URL:</p><pre><code class="go">r := registry.Registration&#123;
+    ServiceName:      registry.LogService,
+    ServiceURL:       serviceAddress,
+    RequiredServices: make([]registry.ServiceName, 0),
+    ServiceUpdateURL: serviceAddress + &quot;/services&quot;,
+    HeartbeatURL:     serviceAddress + &quot;/heartbeat&quot;,
+&#125;
+</code></pre><p>测试</p><p>启动注册中心和两个服务，中途关掉logservice</p><p>注册中心的输出:</p><pre><code class="shell">2022/08/24 19:12:24 Adding service: LogService with URL: http://localhost:4000
+2022/08/24 19:12:24 Heartbeat check passed for LogService
+2022/08/24 19:12:26 Request received
+2022/08/24 19:12:26 Adding service: GradingService with URL: http://localhost:6000
+2022/08/24 19:12:27 Heartbeat check passed for LogService
+2022/08/24 19:12:30 Heartbeat check passed for GradingService
+2022/08/24 19:12:33 Heartbeat check passed for LogService
+2022/08/24 19:12:36 Heartbeat check passed for GradingService
+2022/08/24 19:12:36 Request received
+2022/08/24 19:12:36 Removing servcice at URL: http://localhost:4000
+2022/08/24 19:12:36 Request received
+2022/08/24 19:12:36 Removing servcice at URL: http://localhost:4000
+2022/08/24 19:12:39 Heartbeat check passed for GradingService
+2022/08/24 19:12:42 Heartbeat check passed for GradingService
+2022/08/24 19:12:45 Heartbeat check passed for GradingService
+</code></pre><div class="tags"><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="ic i-tag"></i> 分布式系统</a></div></div><footer><div class="meta"><span class="item"><span class="icon"><i class="ic i-calendar-check"></i> </span><span class="text">更新于</span> <time title="修改时间：2023-06-30 20:44:40" itemprop="dateModified" datetime="2023-06-30T20:44:40+08:00">2023-06-30</time> </span><span id="2022/10/04/computer-science/Simple-distributed/" class="item leancloud_visitors" data-flag-title="Simple_distributed" title="阅读次数"><span class="icon"><i class="ic i-eye"></i> </span><span class="text">阅读次数</span> <span class="leancloud-visitors-count"></span> <span class="text">次</span></span></div><div id="copyright"><ul><li class="author"><strong>本文作者： </strong>Caleb <i class="ic i-at"><em>@</em></i></li><li class="link"><strong>本文链接：</strong> <a href="https://hdqjl317.github.io/2022/10/04/computer-science/Simple-distributed/" title="Simple_distributed">https://hdqjl317.github.io/2022/10/04/computer-science/Simple-distributed/</a></li><li class="license"><strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC96aC1DTg=="><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li></ul></div></footer></article></div><div class="post-nav"><div class="item left"><a href="/2022/08/20/worktech/vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="url" rel="prev" data-background-image="&#x2F;assets&#x2F;yclj.jpg" title="vscode通过密钥连接远程服务器"><span class="type">上一篇</span> <span class="category"><i class="ic i-flag"></i> 工作技能</span><h3>vscode通过密钥连接远程服务器</h3></a></div><div class="item right"><a href="/2023/02/03/computer-science/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" itemprop="url" rel="next" data-background-image="&#x2F;assets&#x2F;byyl.jpg" title="编译原理"><span class="type">下一篇</span> <span class="category"><i class="ic i-flag"></i> 计算机科学</span><h3>编译原理</h3></a></div></div><div class="wrap" id="comments"></div></div><div id="sidebar"><div class="inner"><div class="panels"><div class="inner"><div class="contents panel pjax" data-title="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C"><span class="toc-number">1.</span> <span class="toc-text">服务注册</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.1.</span> <span class="toc-text">创建日志服务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1%E9%80%BB%E8%BE%91"><span class="toc-number">1.1.1.</span> <span class="toc-text">编写日志服务逻辑</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.1.2.</span> <span class="toc-text">运行日志服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.1.3.</span> <span class="toc-text">测试日志服务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E9%80%BB%E8%BE%91"><span class="toc-number">1.2.</span> <span class="toc-text">服务注册逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8B%AC%E7%AB%8B%E8%BF%90%E8%A1%8C%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C"><span class="toc-number">1.3.</span> <span class="toc-text">独立运行服务注册</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C%E4%B8%80%E4%B8%AA%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.4.</span> <span class="toc-text">注册一个服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E6%B6%88%E6%B3%A8%E5%86%8C%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.5.</span> <span class="toc-text">取消注册服务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">服务发现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%9A%E5%8A%A1%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.1.</span> <span class="toc-text">创建业务服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="toc-number">2.2.</span> <span class="toc-text">实现服务发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%9B%B4%E6%96%B0"><span class="toc-number">2.3.</span> <span class="toc-text">服务更新</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%8A%B6%E6%80%81%E7%9B%91%E6%8E%A7"><span class="toc-number">3.</span> <span class="toc-text">服务状态监控</span></a></li></ol></div><div class="related panel pjax" data-title="系列文章"><ul><li class="active"><a href="/2022/10/04/computer-science/Simple-distributed/" rel="bookmark" title="Simple_distributed">Simple_distributed</a></li><li><a href="/2023/02/03/computer-science/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" rel="bookmark" title="编译原理">编译原理</a></li><li><a href="/2023/03/08/computer-science/Rust%E8%BF%87%E7%A8%8B%E5%AE%8F/" rel="bookmark" title="Rust过程宏">Rust过程宏</a></li><li><a href="/2023/03/08/computer-science/Rust%E5%AE%8F/" rel="bookmark" title="Rust宏">Rust宏</a></li><li><a href="/2023/03/12/computer-science/RISCV%E6%B1%87%E7%BC%96%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" rel="bookmark" title="RISCV汇编代码分析">RISCV汇编代码分析</a></li><li><a href="/2023/03/22/computer-science/start-kernel%E5%88%86%E6%9E%90/" rel="bookmark" title="start_kernel分析">start_kernel分析</a></li><li><a href="/2023/03/26/computer-science/Rust%E5%A3%B0%E6%98%8E%E5%AE%8F%E4%B8%8E%E6%9D%A1%E4%BB%B6%E7%BC%96%E8%AF%91/" rel="bookmark" title="Rust声明宏与条件编译">Rust声明宏与条件编译</a></li><li><a href="/2023/03/26/computer-science/Rust%E5%A3%B0%E6%98%8E%E5%AE%8F%E4%B8%8A%E4%B8%8B%E6%96%87%E6%97%A0%E5%85%B3%E6%96%87%E6%B3%95/" rel="bookmark" title="Rust声明宏上下文无关文法">Rust声明宏上下文无关文法</a></li><li><a href="/2023/03/29/computer-science/%E4%BB%A5time-gettimeofday%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%B8%BA%E4%BE%8B%E5%88%86%E6%9E%90ARM64-Linux5-4-34/" rel="bookmark" title="以time/gettimeofday系统调用为例分析ARM64-Linux5.4.34">以time/gettimeofday系统调用为例分析ARM64-Linux5.4.34</a></li><li><a href="/2023/04/02/computer-science/Rust%E6%9D%A1%E4%BB%B6%E7%BC%96%E8%AF%91/" rel="bookmark" title="Rust条件编译">Rust条件编译</a></li><li><a href="/2023/04/02/computer-science/Rust%E5%A3%B0%E6%98%8E%E5%AE%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BE%8B%E5%AD%90/" rel="bookmark" title="Rust声明宏的一些例子">Rust声明宏的一些例子</a></li><li><a href="/2023/04/25/computer-science/c2rust%E5%AE%8F%E6%8C%87%E4%BB%A4%E8%BD%AC%E5%8C%96%E8%A7%84%E5%88%991/" rel="bookmark" title="c2rust宏指令转化规则1">c2rust宏指令转化规则1</a></li><li><a href="/2023/04/25/computer-science/c2rust%E5%AE%8F%E6%8C%87%E4%BB%A4%E8%BD%AC%E5%8C%96%E8%A7%84%E5%88%992/" rel="bookmark" title="c2rust宏指令转化规则2">c2rust宏指令转化规则2</a></li><li><a href="/2023/04/25/computer-science/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E5%88%87%E6%8D%A2/" rel="bookmark" title="Linux操作系统深入理解进程切换">Linux操作系统深入理解进程切换</a></li><li><a href="/2023/06/30/computer-science/C%E5%AE%8F%E5%88%B0Rust%E5%AE%8F%E8%BD%AC%E5%8C%96%E8%A7%84%E5%88%99%E8%AE%BE%E8%AE%A1/" rel="bookmark" title="C宏到Rust宏转化规则设计">C宏到Rust宏转化规则设计</a></li></ul></div><div class="overview panel" data-title="站点概览"><div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="image" itemprop="image" alt="Caleb" data-src="/images/avatar.jpg"><p class="name" itemprop="name">Caleb</p><div class="description" itemprop="description">欢迎来到 Caleb 的个人博客!</div></div><nav class="state"><div class="item posts"><a href="/archives/"><span class="count">20</span> <span class="name">文章</span></a></div><div class="item categories"><a href="/categories/"><span class="count">4</span> <span class="name">分类</span></a></div><div class="item tags"><a href="/tags/"><span class="count">8</span> <span class="name">标签</span></a></div></nav><div class="social"><span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0hEcWpsMzE3" title="https:&#x2F;&#x2F;github.com&#x2F;HDqjl317"><i class="ic i-github"></i></span> <span class="exturl item email" data-url="bWFpbHRvOmppYWxlX3F1YW5AdXN0Yy5lZHU=" title="mailto:jiale_quan@ustc.edu"><i class="ic i-envelope"></i></span></div><ul class="menu"><li class="item"><a href="/" rel="section"><i class="ic i-home"></i>首页</a></li><li class="item"><a href="/about/" rel="section"><i class="ic i-user"></i>关于</a></li><li class="item dropdown"><a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a><ul class="submenu"><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li></ul></li></ul></div></div></div><ul id="quick"><li class="prev pjax"><a href="/2022/08/20/worktech/vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a></li><li class="up"><i class="ic i-arrow-up"></i></li><li class="down"><i class="ic i-arrow-down"></i></li><li class="next pjax"><a href="/2023/02/03/computer-science/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a></li><li class="percent"></li></ul></div></div><div class="dimmer"></div></div></main><footer id="footer"><div class="inner"><div class="widgets"><div class="rpost pjax"><h2>随机文章</h2><ul><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/03/29/computer-science/%E4%BB%A5time-gettimeofday%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%B8%BA%E4%BE%8B%E5%88%86%E6%9E%90ARM64-Linux5-4-34/" title="以time&#x2F;gettimeofday系统调用为例分析ARM64-Linux5.4.34">以time/gettimeofday系统调用为例分析ARM64-Linux5.4.34</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/codelanguage/" title="分类于 编程语言">编程语言</a></div><span><a href="/2022/08/10/codelanguage/cpp11%E6%96%B0%E7%89%B9%E6%80%A7%E7%AF%873/" title="cpp11新特性篇3">cpp11新特性篇3</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/03/26/computer-science/Rust%E5%A3%B0%E6%98%8E%E5%AE%8F%E4%B8%8A%E4%B8%8B%E6%96%87%E6%97%A0%E5%85%B3%E6%96%87%E6%B3%95/" title="Rust声明宏上下文无关文法">Rust声明宏上下文无关文法</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/04/25/computer-science/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E5%88%87%E6%8D%A2/" title="Linux操作系统深入理解进程切换">Linux操作系统深入理解进程切换</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/02/03/computer-science/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" title="编译原理">编译原理</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/06/30/computer-science/C%E5%AE%8F%E5%88%B0Rust%E5%AE%8F%E8%BD%AC%E5%8C%96%E8%A7%84%E5%88%99%E8%AE%BE%E8%AE%A1/" title="C宏到Rust宏转化规则设计">C宏到Rust宏转化规则设计</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/codelanguage/" title="分类于 编程语言">编程语言</a></div><span><a href="/2022/08/04/codelanguage/cpp11%E6%96%B0%E7%89%B9%E6%80%A7%E7%AF%872/" title="cpp11新特性篇2">cpp11新特性篇2</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/03/08/computer-science/Rust%E8%BF%87%E7%A8%8B%E5%AE%8F/" title="Rust过程宏">Rust过程宏</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/04/25/computer-science/c2rust%E5%AE%8F%E6%8C%87%E4%BB%A4%E8%BD%AC%E5%8C%96%E8%A7%84%E5%88%992/" title="c2rust宏指令转化规则2">c2rust宏指令转化规则2</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/03/12/computer-science/RISCV%E6%B1%87%E7%BC%96%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" title="RISCV汇编代码分析">RISCV汇编代码分析</a></span></li></ul></div><div><h2>最新评论</h2><ul class="leancloud-recent-comment"></ul></div></div><div class="status"><div class="copyright">&copy; 2022 – <span itemprop="copyrightYear">2023</span> <span class="with-love"><i class="ic i-sakura rotate"></i> </span><span class="author" itemprop="copyrightHolder">Caleb @ Caleb</span></div><div class="count"><span class="post-meta-item-icon"><i class="ic i-chart-area"></i> </span><span title="站点总字数">105k 字</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="ic i-coffee"></i> </span><span title="站点阅读时长">1:35</span></div><div class="powered-by">基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span></div></div></div></footer></div><script data-config type="text/javascript">var LOCAL={path:"2022/10/04/computer-science/Simple-distributed/",favicon:{show:"（●´3｀●）やれやれだぜ",hide:"(´Д｀)大変だ！"},search:{placeholder:"文章搜索",empty:"关于 「 ${query} 」，什么也没搜到",stats:"${time} ms 内找到 ${hits} 条结果"},valine:!0,fancybox:!0,copyright:'复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',ignores:[function(e){return e.includes("#")},function(e){return new RegExp(LOCAL.path+"$").test(e)}]}</script><script src="https://cdn.polyfill.io/v2/polyfill.js"></script><script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script><script src="/js/app.js?v=0.2.5"></script></body></html>

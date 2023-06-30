@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#FFF"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"><link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" type="application/rss+xml" href="https://hdqjl317.github.io/rss.xml"><link rel="alternate" type="application/atom+xml" href="https://hdqjl317.github.io/atom.xml"><link rel="alternate" type="application/json" href="https://hdqjl317.github.io/feed.json"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext"><link rel="stylesheet" href="/css/app.css?v=0.2.5"><meta name="keywords" content="Linux"><link rel="canonical" href="https://hdqjl317.github.io/2023/03/22/computer-science/start-kernel%E5%88%86%E6%9E%90/"><title>start_kernel分析 - 计算机科学 | Caleb = = 加楽的小站</title><meta name="generator" content="Hexo 6.3.0"></head><body itemscope itemtype="http://schema.org/WebPage"><div id="loading"><div class="cat"><div class="body"></div><div class="head"><div class="face"></div></div><div class="foot"><div class="tummy-end"></div><div class="bottom"></div><div class="legs left"></div><div class="legs right"></div></div><div class="paw"><div class="hands left"></div><div class="hands right"></div></div></div></div><div id="container"><header id="header" itemscope itemtype="http://schema.org/WPHeader"><div class="inner"><div id="brand"><div class="pjax"><h1 itemprop="name headline">start_kernel分析</h1><div class="meta"><span class="item" title="创建时间：2023-03-22 20:37:30"><span class="icon"><i class="ic i-calendar"></i> </span><span class="text">发表于</span> <time itemprop="dateCreated datePublished" datetime="2023-03-22T20:37:30+08:00">2023-03-22</time> </span><span class="item" title="本文字数"><span class="icon"><i class="ic i-pen"></i> </span><span class="text">本文字数</span> <span>8k</span> <span class="text">字</span> </span><span class="item" title="阅读时长"><span class="icon"><i class="ic i-clock"></i> </span><span class="text">阅读时长</span> <span>7 分钟</span></span></div></div></div><nav id="nav"><div class="inner"><div class="toggle"><div class="lines" aria-label="切换导航栏"><span class="line"></span> <span class="line"></span> <span class="line"></span></div></div><ul class="menu"><li class="item title"><a href="/" rel="start">Caleb</a></li></ul><ul class="right"><li class="item theme"><i class="ic i-sun"></i></li><li class="item search"><i class="ic i-search"></i></li></ul></div></nav></div><div id="imgs" class="pjax"><img src="/assets/linux.png"></div></header><div id="waves"><svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"/></defs><g class="parallax"><use xlink:href="#gentle-wave" x="48" y="0"/><use xlink:href="#gentle-wave" x="48" y="3"/><use xlink:href="#gentle-wave" x="48" y="5"/><use xlink:href="#gentle-wave" x="48" y="7"/></g></svg></div><main><div class="inner"><div id="main" class="pjax"><div class="article wrap"><div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList"><i class="ic i-home"></i> <span><a href="/">首页</a></span><i class="ic i-angle-right"></i> <span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/computer-science/" itemprop="item" rel="index" title="分类于 计算机科学"><span itemprop="name">计算机科学</span></a><meta itemprop="position" content="1"></span></div><article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="https://hdqjl317.github.io/2023/03/22/computer-science/start-kernel%E5%88%86%E6%9E%90/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.jpg"><meta itemprop="name" content="Caleb"><meta itemprop="description" content="加楽的小站, 欢迎来到 Caleb 的个人博客!"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content=""></span><div class="body md" itemprop="articleBody"><h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><pre><code class="shell">sudo apt install build-essential
+sudo apt install qemu 
+sudo apt install libncurses5-dev bison flex libssl-dev libelf-dev
+</code></pre><h3 id="下载内核源码"><a href="#下载内核源码" class="headerlink" title="下载内核源码"></a>下载内核源码</h3><pre><code class="shell">sudo apt install axel
+axel -n 20 https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.4.34.tar.xz
+xz -d linux-5.4.34.tar.xz
+tar -xvf linux-5.4.34.tar 
+cd linux-5.4.34
+</code></pre><h3 id="配置内核选项"><a href="#配置内核选项" class="headerlink" title="配置内核选项"></a>配置内核选项</h3><pre><code class="shell">make defconfig 	# Default configuration is based on &#39;x86_64_defconfig&#39;
+make menuconfig	# 打开debug相关选项
+</code></pre><p><img data-src="/start-kernel%E5%88%86%E6%9E%90/image-20230322184745975.png"></p><p>进行如下设置：</p><pre><code class="shell">Kernel hacking —&gt;
+Compile-time checks and compiler options —&gt;
+[*] Compile the kernel with debug info
+[*] Provide GDB scripts for kernel debugging
+[*] Kernel debugging
+关闭KASLR（随机地址），否则会导致打断点失败。
+Processor type and features ----&gt;
+[ ] Randomize the address of the kernel image (KASLR)
+</code></pre><h3 id="编译运行内核"><a href="#编译运行内核" class="headerlink" title="编译运行内核"></a>编译运行内核</h3><pre><code class="shell">make -j$(nproc) 
+qemu-system-x86_64 -kernel arch/x86/boot/bzImage
+</code></pre><h3 id="制作内存根文件系统"><a href="#制作内存根文件系统" class="headerlink" title="制作内存根文件系统"></a>制作内存根文件系统</h3><pre><code class="shell">#首先从https://www.busybox.net下载 busybox源代码解压，解压完成后，跟内核一样先配置编译，并安装。
+axel -n 20 https://busybox.net/downloads/busybox-1.31.1.tar.bz2
+tar -jxvf busybox-1.31.1.tar.bz2
+cd busybox-1.31.1
+make menuconfig #Setting里的Build static binary (no shared libs)选中
+</code></pre><p>然后编译安装，默认会安装到源码目录下的 _install 目录中。</p><pre><code class="shell">make -j$(nproc) &amp;&amp; sudo make install
+</code></pre><p>然后制作内存根文件系统镜像:</p><pre><code>mkdir rootfs # 在/linux-5.4.34文件夹下新建rootfs文件夹
+cd rootfs
+cp ../busybox-1.31.1/_install/* ./ -rf
+mkdir dev proc sys home
+sudo cp -a /dev/&#123;null,console,tty,tty1,tty2,tty3,tty4&#125; dev/
+</code></pre><p>准备init脚本文件放在根文件系统跟目录下（rootfs&#x2F;init），添加如下内容到init文件。</p><pre><code class="shell">#!/bin/sh
+mount -t proc none /proc
+mount -t sysfs none /sys
+echo “Wellcome qjliOS!”
+echo “--------------------”
+cd home
+/bin/sh
+</code></pre><p>给init脚本添加可执行权限：</p><pre><code class="shell">chmod +x init
+</code></pre><p>打包成内存根文件系统镜像：</p><pre><code class="shell">find . -print0 | cpio --null -ov --format=newc | gzip -9 &gt; ../rootfs.cpio.gz 
+</code></pre><p>测试挂载根文件系统，看内核启动完成后是否执行init脚本。</p><pre><code class="shell">qemu-system-x86_64 -kernel ./arch/x86/boot/bzImage -initrd rootfs.cpio.gz
+</code></pre><p>出现 “Wellcome qjliOS!”则init脚本执行成功。</p><h3 id="VSCode配置Linux内核调试环境"><a href="#VSCode配置Linux内核调试环境" class="headerlink" title="VSCode配置Linux内核调试环境"></a>VSCode配置Linux内核调试环境</h3><p>由于 Linux 内核高度定制化，所以没有办法直接通过配置 includePath 等让 Intellisense 正常提示，这里借助一个 Python 脚本来生成 compile_commands.json 文件帮助 Intellisense 正常提示（包括头文件和宏定义等）。在Linux源代码目录下直接运行如下命令就可以生成compile_commands.json 了。</p><pre><code class="shell">python ./scripts/gen_compile_commands.py
+</code></pre><p>新建一个.vscode文件夹，将配置文件放入该文件夹内,配置如下五个文件：c_cpp_properties.json，init，launch.json，settings.json，tasks.json。</p><p><strong>c_cpp_properties.json</strong></p><pre><code class="json">&#123;
+    &quot;configurations&quot;: [
+        &#123;
+            &quot;name&quot;: &quot;Linux&quot;,
+            &quot;includePath&quot;: [
+                &quot;$&#123;workspaceFolder&#125;/arch/x86/include/**&quot;,
+                &quot;$&#123;workspaceFolder&#125;/include/**&quot;,
+                &quot;$&#123;workspaceFolder&#125;/include/linux/**&quot;,
+                &quot;$&#123;workspaceFolder&#125;/arch/x86/**&quot;,
+                &quot;$&#123;workspaceFolder&#125;/**&quot;
+            ],
+            &quot;cStandard&quot;: &quot;c11&quot;,
+            &quot;intelliSenseMode&quot;: &quot;gcc-x64&quot;,
+            &quot;compileCommands&quot;: &quot;$&#123;workspaceFolder&#125;/compile_commands.json&quot;
+        &#125;
+    ],
+    &quot;version&quot;: 4
+&#125;
+</code></pre><p><strong>init</strong></p><pre><code class="shell">#!/bin/sh
+mount -t proc none /proc
+mount -t sysfs none /sys
+
+echo &quot;Wellcome qjlOS!&quot;
+echo &quot;--------------------&quot;
+cd home
+/bin/sh
+</code></pre><p><strong>launch.json</strong></p><pre><code class="json">&#123;
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    &quot;version&quot;: &quot;0.2.0&quot;,
+    &quot;configurations&quot;: [
+      &#123;
+        &quot;name&quot;: &quot;(gdb) linux&quot;,
+        &quot;type&quot;: &quot;cppdbg&quot;,
+        &quot;request&quot;: &quot;launch&quot;,
+        &quot;preLaunchTask&quot;: &quot;vm&quot;,
+        &quot;program&quot;: &quot;$&#123;workspaceRoot&#125;/vmlinux&quot;,
+        &quot;miDebuggerServerAddress&quot;: &quot;localhost:1234&quot;,
+        &quot;args&quot;: [],
+        &quot;stopAtEntry&quot;: true,
+        &quot;cwd&quot;: &quot;$&#123;workspaceFolder&#125;&quot;,
+        &quot;environment&quot;: [],
+        &quot;externalConsole&quot;: false,
+        &quot;MIMode&quot;: &quot;gdb&quot;,
+        &quot;miDebuggerArgs&quot;: &quot;-n&quot;,
+        &quot;targetArchitecture&quot;: &quot;x64&quot;,
+        &quot;setupCommands&quot;: [
+          &#123;
+            &quot;text&quot;: &quot;set arch i386:x86-64:intel&quot;,
+            &quot;ignoreFailures&quot;: false
+          &#125;,
+          &#123;
+            &quot;text&quot;: &quot;dir .&quot;,
+            &quot;ignoreFailures&quot;: false
+          &#125;,
+          &#123;
+            &quot;text&quot;: &quot;add-auto-load-safe-path ./&quot;,
+            &quot;ignoreFailures&quot;: false
+          &#125;,
+          &#123;
+            &quot;text&quot;: &quot;-enable-pretty-printing&quot;,
+            &quot;ignoreFailures&quot;: true
+          &#125;
+        ]
+      &#125;
+    ]
+  &#125;
+</code></pre><p><strong>settings.json</strong></p><pre><code class="json">&#123;
+    &quot;search.exclude&quot;: &#123;
+        &quot;**/.git&quot;: true,
+        &quot;**/.svn&quot;: true,
+        &quot;**/.DS_Store&quot;: true,
+        &quot;**/drivers&quot;: true,
+        &quot;**/sound&quot;: true,
+        &quot;**/tools&quot;: true,
+        &quot;**/arch/alpha&quot;: true,
+        &quot;**/arch/arc&quot;: true,
+        &quot;**/arch/c6x&quot;: true,
+        &quot;**/arch/h8300&quot;: true,
+        &quot;**/arch/hexagon&quot;: true,
+        &quot;**/arch/ia64&quot;: true,
+        &quot;**/arch/m32r&quot;: true,
+        &quot;**/arch/m68k&quot;: true,
+        &quot;**/arch/microblaze&quot;: true,
+        &quot;**/arch/mn10300&quot;: true,
+        &quot;**/arch/nds32&quot;: true,
+        &quot;**/arch/nios2&quot;: true,
+        &quot;**/arch/parisc&quot;: true,
+        &quot;**/arch/powerpc&quot;: true,
+        &quot;**/arch/s390&quot;: true,
+        &quot;**/arch/sparc&quot;: true,
+        &quot;**/arch/score&quot;: true,
+        &quot;**/arch/sh&quot;: true,
+        &quot;**/arch/um&quot;: true,
+        &quot;**/arch/unicore32&quot;: true,
+        &quot;**/arch/xtensa&quot;: true
+    &#125;,
+    &quot;files.exclude&quot;: &#123;
+        &quot;**/.*.*.cmd&quot;: true,
+        &quot;**/.*.d&quot;: true,
+        &quot;**/.*.o&quot;: true,
+        &quot;**/.*.S&quot;: true,
+        &quot;**/.git&quot;: true,
+        &quot;**/.svn&quot;: true,
+        &quot;**/.DS_Store&quot;: true,
+        &quot;**/drivers&quot;: true,
+        &quot;**/sound&quot;: true,
+        &quot;**/tools&quot;: true,
+        &quot;**/arch/alpha&quot;: true,
+        &quot;**/arch/arc&quot;: true,
+        &quot;**/arch/c6x&quot;: true,
+        &quot;**/arch/h8300&quot;: true,
+        &quot;**/arch/hexagon&quot;: true,
+        &quot;**/arch/ia64&quot;: true,
+        &quot;**/arch/m32r&quot;: true,
+        &quot;**/arch/m68k&quot;: true,
+        &quot;**/arch/microblaze&quot;: true,
+        &quot;**/arch/mn10300&quot;: true,
+        &quot;**/arch/nds32&quot;: true,
+        &quot;**/arch/nios2&quot;: true,
+        &quot;**/arch/parisc&quot;: true,
+        &quot;**/arch/powerpc&quot;: true,
+        &quot;**/arch/s390&quot;: true,
+        &quot;**/arch/sparc&quot;: true,
+        &quot;**/arch/score&quot;: true,
+        &quot;**/arch/sh&quot;: true,
+        &quot;**/arch/um&quot;: true,
+        &quot;**/arch/unicore32&quot;: true,
+        &quot;**/arch/xtensa&quot;: true
+    &#125;,
+    &quot;[c]&quot;: &#123;
+        &quot;editor.detectIndentation&quot;: false,
+        &quot;editor.tabSize&quot;: 8,
+        &quot;editor.insertSpaces&quot;: false
+    &#125;,
+    &quot;C_Cpp.errorSquiggles&quot;: &quot;Disabled&quot;
+&#125;
+</code></pre><p><strong>tasks.json</strong></p><pre><code class="json">&#123;
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    &quot;version&quot;: &quot;2.0.0&quot;,
+    &quot;tasks&quot;: [
+      &#123;
+        &quot;label&quot;: &quot;vm&quot;,
+        &quot;type&quot;: &quot;shell&quot;,
+        &quot;command&quot;: &quot;qemu-system-x86_64 -kernel $&#123;workspaceFolder&#125;/arch/x86/boot/bzImage -initrd ../rootfs.cpio.gz -S -s -nographic -append \&quot;console=ttyS0\&quot;&quot;,
+        &quot;presentation&quot;: &#123;
+          &quot;echo&quot;: true,
+          &quot;clear&quot;: true,
+          &quot;group&quot;: &quot;vm&quot;
+        &#125;,
+        &quot;isBackground&quot;: true,
+        &quot;problemMatcher&quot;: [
+          &#123;
+            &quot;pattern&quot;: [
+              &#123;
+                &quot;regexp&quot;: &quot;.&quot;,
+                &quot;file&quot;: 1,
+                &quot;location&quot;: 2,
+                &quot;message&quot;: 3
+              &#125;
+            ],
+            &quot;background&quot;: &#123;
+              &quot;activeOnStart&quot;: true,
+              &quot;beginsPattern&quot;: &quot;.&quot;,
+              &quot;endsPattern&quot;: &quot;.&quot;,
+            &#125;
+          &#125;
+        ]
+      &#125;,
+      &#123;
+        &quot;label&quot;: &quot;build linux&quot;,
+        &quot;type&quot;: &quot;shell&quot;,
+        &quot;command&quot;: &quot;make&quot;,
+        &quot;group&quot;: &#123;
+          &quot;kind&quot;: &quot;build&quot;,
+          &quot;isDefault&quot;: true
+        &#125;,
+        &quot;presentation&quot;: &#123;
+          &quot;echo&quot;: false,
+          &quot;group&quot;: &quot;build&quot;
+        &#125;
+      &#125;
+    ]
+&#125;
+</code></pre><h3 id="start-kernel分析"><a href="#start-kernel分析" class="headerlink" title="start_kernel分析"></a>start_kernel分析</h3><p>Linux内核的起点是start_kernel函数，因此先在start_kernel处打断点，启动调试，程序在断点处暂停，从start_kernel开始进行跟踪分析。单步跳过进行跟踪分析，发现0号进程init_task被设为整个系统的初始进程，即0号进程是手工创建的，其他进程都是0号进程创建的。在内核引导时，init_task会被创建并启动，是所有其他进程的起点。</p><p><img data-src="/start-kernel%E5%88%86%E6%9E%90/image-20230322182527537.png"></p><p>继续单步跳过，start_kernel执行各种初始化操作。</p><p><img data-src="/start-kernel%E5%88%86%E6%9E%90/image-20230322182615765.png"></p><p>在start_kernel()函数末尾，arch_call_rest_init()函数体内为rest_init()函数，因此设置一个rest_init函数断点，进入rest_init函数体内，该函数由0号进程执行。</p><p><img data-src="/start-kernel%E5%88%86%E6%9E%90/image-20230322182637929.png"></p><p>kernel_thread函数创建kernel_init，对应1号进程，是所有用户进程的祖先。</p><p><img data-src="/start-kernel%E5%88%86%E6%9E%90/image-20230322182654775.png"></p><p>接着kernel_thread函数创建kthreadd，对应2号进程，是所有内核进程的祖先。</p><p><img data-src="/start-kernel%E5%88%86%E6%9E%90/image-20230322182731769.png"></p><p>进入kernel_thread函数查看，该函数通过do_fork函数创建进程。通过kernel_thread函数代码可以看到1号进程和2号进程最终都是通过do_fork创建的，用户态通过系统调用fork创建一个进程最终也是通过do_fork来完成的。</p><p><img data-src="/start-kernel%E5%88%86%E6%9E%90/image-20230322182849414.png"></p><p>进程的创建过程大致是父进程通过fork系统调用进入内核_do_fork函数，复制进程描述符及相关进程资源（采用写时复制技术）、分配子进程的内核堆栈并对内核堆栈和thread等进程关键上下文进行初始化，最后将子进程放入就绪队列，fork系统调用返回；而子进程则在被调度执行时根据设置的内核堆栈和thread等进程关键上下文开始执行。</p><p>查看kernel_init函数定义，如下图的代码实现部分会调用run_init_process函数。</p><p><img data-src="/start-kernel%E5%88%86%E6%9E%90/image-20230322183036095.png"></p><p>run_init_process函数如下，其中do_execve用于加载可执行文件、运行init程序并执行exec系统调用。1号进程完成用户态初始化。</p><p><img data-src="/start-kernel%E5%88%86%E6%9E%90/image-20230322183100553.png"></p><p>查看kthreadd函数定义。2号进程创建并完成初始化。</p><p><img data-src="/start-kernel%E5%88%86%E6%9E%90/image-20230322183119712.png"></p><div class="tags"><a href="/tags/Linux/" rel="tag"><i class="ic i-tag"></i> Linux</a></div></div><footer><div class="meta"><span class="item"><span class="icon"><i class="ic i-calendar-check"></i> </span><span class="text">更新于</span> <time title="修改时间：2023-06-30 20:38:42" itemprop="dateModified" datetime="2023-06-30T20:38:42+08:00">2023-06-30</time> </span><span id="2023/03/22/computer-science/start-kernel分析/" class="item leancloud_visitors" data-flag-title="start_kernel分析" title="阅读次数"><span class="icon"><i class="ic i-eye"></i> </span><span class="text">阅读次数</span> <span class="leancloud-visitors-count"></span> <span class="text">次</span></span></div><div id="copyright"><ul><li class="author"><strong>本文作者： </strong>Caleb <i class="ic i-at"><em>@</em></i></li><li class="link"><strong>本文链接：</strong> <a href="https://hdqjl317.github.io/2023/03/22/computer-science/start-kernel%E5%88%86%E6%9E%90/" title="start_kernel分析">https://hdqjl317.github.io/2023/03/22/computer-science/start-kernel分析/</a></li><li class="license"><strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC96aC1DTg=="><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li></ul></div></footer></article></div><div class="post-nav"><div class="item left"><a href="/2023/03/12/computer-science/RISCV%E6%B1%87%E7%BC%96%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" itemprop="url" rel="prev" data-background-image="&#x2F;assets&#x2F;risc.png" title="RISCV汇编代码分析"><span class="type">上一篇</span> <span class="category"><i class="ic i-flag"></i> 计算机科学</span><h3>RISCV汇编代码分析</h3></a></div><div class="item right"><a href="/2023/03/26/computer-science/Rust%E5%A3%B0%E6%98%8E%E5%AE%8F%E4%B8%8E%E6%9D%A1%E4%BB%B6%E7%BC%96%E8%AF%91/" itemprop="url" rel="next" data-background-image="&#x2F;assets&#x2F;rustlogo.png" title="Rust声明宏与条件编译"><span class="type">下一篇</span> <span class="category"><i class="ic i-flag"></i> 计算机科学</span><h3>Rust声明宏与条件编译</h3></a></div></div><div class="wrap" id="comments"></div></div><div id="sidebar"><div class="inner"><div class="panels"><div class="inner"><div class="contents panel pjax" data-title="文章目录"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">下载内核源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%86%85%E6%A0%B8%E9%80%89%E9%A1%B9"><span class="toc-number">3.</span> <span class="toc-text">配置内核选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8C%E5%86%85%E6%A0%B8"><span class="toc-number">4.</span> <span class="toc-text">编译运行内核</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E5%86%85%E5%AD%98%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">5.</span> <span class="toc-text">制作内存根文件系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VSCode%E9%85%8D%E7%BD%AELinux%E5%86%85%E6%A0%B8%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83"><span class="toc-number">6.</span> <span class="toc-text">VSCode配置Linux内核调试环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#start-kernel%E5%88%86%E6%9E%90"><span class="toc-number">7.</span> <span class="toc-text">start_kernel分析</span></a></li></ol></div><div class="related panel pjax" data-title="系列文章"><ul><li><a href="/2022/10/04/computer-science/Simple-distributed/" rel="bookmark" title="Simple_distributed">Simple_distributed</a></li><li><a href="/2023/02/03/computer-science/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" rel="bookmark" title="编译原理">编译原理</a></li><li><a href="/2023/03/08/computer-science/Rust%E8%BF%87%E7%A8%8B%E5%AE%8F/" rel="bookmark" title="Rust过程宏">Rust过程宏</a></li><li><a href="/2023/03/08/computer-science/Rust%E5%AE%8F/" rel="bookmark" title="Rust宏">Rust宏</a></li><li><a href="/2023/03/12/computer-science/RISCV%E6%B1%87%E7%BC%96%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" rel="bookmark" title="RISCV汇编代码分析">RISCV汇编代码分析</a></li><li class="active"><a href="/2023/03/22/computer-science/start-kernel%E5%88%86%E6%9E%90/" rel="bookmark" title="start_kernel分析">start_kernel分析</a></li><li><a href="/2023/03/26/computer-science/Rust%E5%A3%B0%E6%98%8E%E5%AE%8F%E4%B8%8E%E6%9D%A1%E4%BB%B6%E7%BC%96%E8%AF%91/" rel="bookmark" title="Rust声明宏与条件编译">Rust声明宏与条件编译</a></li><li><a href="/2023/03/26/computer-science/Rust%E5%A3%B0%E6%98%8E%E5%AE%8F%E4%B8%8A%E4%B8%8B%E6%96%87%E6%97%A0%E5%85%B3%E6%96%87%E6%B3%95/" rel="bookmark" title="Rust声明宏上下文无关文法">Rust声明宏上下文无关文法</a></li><li><a href="/2023/03/29/computer-science/%E4%BB%A5time-gettimeofday%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%B8%BA%E4%BE%8B%E5%88%86%E6%9E%90ARM64-Linux5-4-34/" rel="bookmark" title="以time/gettimeofday系统调用为例分析ARM64-Linux5.4.34">以time/gettimeofday系统调用为例分析ARM64-Linux5.4.34</a></li><li><a href="/2023/04/02/computer-science/Rust%E6%9D%A1%E4%BB%B6%E7%BC%96%E8%AF%91/" rel="bookmark" title="Rust条件编译">Rust条件编译</a></li><li><a href="/2023/04/02/computer-science/Rust%E5%A3%B0%E6%98%8E%E5%AE%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BE%8B%E5%AD%90/" rel="bookmark" title="Rust声明宏的一些例子">Rust声明宏的一些例子</a></li><li><a href="/2023/04/25/computer-science/c2rust%E5%AE%8F%E6%8C%87%E4%BB%A4%E8%BD%AC%E5%8C%96%E8%A7%84%E5%88%991/" rel="bookmark" title="c2rust宏指令转化规则1">c2rust宏指令转化规则1</a></li><li><a href="/2023/04/25/computer-science/c2rust%E5%AE%8F%E6%8C%87%E4%BB%A4%E8%BD%AC%E5%8C%96%E8%A7%84%E5%88%992/" rel="bookmark" title="c2rust宏指令转化规则2">c2rust宏指令转化规则2</a></li><li><a href="/2023/04/25/computer-science/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E5%88%87%E6%8D%A2/" rel="bookmark" title="Linux操作系统深入理解进程切换">Linux操作系统深入理解进程切换</a></li><li><a href="/2023/06/30/computer-science/C%E5%AE%8F%E5%88%B0Rust%E5%AE%8F%E8%BD%AC%E5%8C%96%E8%A7%84%E5%88%99%E8%AE%BE%E8%AE%A1/" rel="bookmark" title="C宏到Rust宏转化规则设计">C宏到Rust宏转化规则设计</a></li></ul></div><div class="overview panel" data-title="站点概览"><div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="image" itemprop="image" alt="Caleb" data-src="/images/avatar.jpg"><p class="name" itemprop="name">Caleb</p><div class="description" itemprop="description">欢迎来到 Caleb 的个人博客!</div></div><nav class="state"><div class="item posts"><a href="/archives/"><span class="count">20</span> <span class="name">文章</span></a></div><div class="item categories"><a href="/categories/"><span class="count">4</span> <span class="name">分类</span></a></div><div class="item tags"><a href="/tags/"><span class="count">8</span> <span class="name">标签</span></a></div></nav><div class="social"><span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0hEcWpsMzE3" title="https:&#x2F;&#x2F;github.com&#x2F;HDqjl317"><i class="ic i-github"></i></span> <span class="exturl item email" data-url="bWFpbHRvOmppYWxlX3F1YW5AdXN0Yy5lZHU=" title="mailto:jiale_quan@ustc.edu"><i class="ic i-envelope"></i></span></div><ul class="menu"><li class="item"><a href="/" rel="section"><i class="ic i-home"></i>首页</a></li><li class="item"><a href="/about/" rel="section"><i class="ic i-user"></i>关于</a></li><li class="item dropdown"><a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a><ul class="submenu"><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li></ul></li></ul></div></div></div><ul id="quick"><li class="prev pjax"><a href="/2023/03/12/computer-science/RISCV%E6%B1%87%E7%BC%96%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a></li><li class="up"><i class="ic i-arrow-up"></i></li><li class="down"><i class="ic i-arrow-down"></i></li><li class="next pjax"><a href="/2023/03/26/computer-science/Rust%E5%A3%B0%E6%98%8E%E5%AE%8F%E4%B8%8E%E6%9D%A1%E4%BB%B6%E7%BC%96%E8%AF%91/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a></li><li class="percent"></li></ul></div></div><div class="dimmer"></div></div></main><footer id="footer"><div class="inner"><div class="widgets"><div class="rpost pjax"><h2>随机文章</h2><ul><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/04/02/computer-science/Rust%E6%9D%A1%E4%BB%B6%E7%BC%96%E8%AF%91/" title="Rust条件编译">Rust条件编译</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/03/26/computer-science/Rust%E5%A3%B0%E6%98%8E%E5%AE%8F%E4%B8%8E%E6%9D%A1%E4%BB%B6%E7%BC%96%E8%AF%91/" title="Rust声明宏与条件编译">Rust声明宏与条件编译</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/04/25/computer-science/c2rust%E5%AE%8F%E6%8C%87%E4%BB%A4%E8%BD%AC%E5%8C%96%E8%A7%84%E5%88%991/" title="c2rust宏指令转化规则1">c2rust宏指令转化规则1</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2022/10/04/computer-science/Simple-distributed/" title="Simple_distributed">Simple_distributed</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/02/03/computer-science/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" title="编译原理">编译原理</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/03/22/computer-science/start-kernel%E5%88%86%E6%9E%90/" title="start_kernel分析">start_kernel分析</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/codelanguage/" title="分类于 编程语言">编程语言</a></div><span><a href="/2022/08/04/codelanguage/cpp11%E6%96%B0%E7%89%B9%E6%80%A7%E7%AF%872/" title="cpp11新特性篇2">cpp11新特性篇2</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/codelanguage/" title="分类于 编程语言">编程语言</a></div><span><a href="/2022/08/01/codelanguage/cpp11%E6%96%B0%E7%89%B9%E6%80%A7%E7%AF%871/" title="cpp11新特性篇1">cpp11新特性篇1</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/06/30/computer-science/C%E5%AE%8F%E5%88%B0Rust%E5%AE%8F%E8%BD%AC%E5%8C%96%E8%A7%84%E5%88%99%E8%AE%BE%E8%AE%A1/" title="C宏到Rust宏转化规则设计">C宏到Rust宏转化规则设计</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/computer-science/" title="分类于 计算机科学">计算机科学</a></div><span><a href="/2023/03/26/computer-science/Rust%E5%A3%B0%E6%98%8E%E5%AE%8F%E4%B8%8A%E4%B8%8B%E6%96%87%E6%97%A0%E5%85%B3%E6%96%87%E6%B3%95/" title="Rust声明宏上下文无关文法">Rust声明宏上下文无关文法</a></span></li></ul></div><div><h2>最新评论</h2><ul class="leancloud-recent-comment"></ul></div></div><div class="status"><div class="copyright">&copy; 2022 – <span itemprop="copyrightYear">2023</span> <span class="with-love"><i class="ic i-sakura rotate"></i> </span><span class="author" itemprop="copyrightHolder">Caleb @ Caleb</span></div><div class="count"><span class="post-meta-item-icon"><i class="ic i-chart-area"></i> </span><span title="站点总字数">105k 字</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="ic i-coffee"></i> </span><span title="站点阅读时长">1:35</span></div><div class="powered-by">基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span></div></div></div></footer></div><script data-config type="text/javascript">var LOCAL={path:"2023/03/22/computer-science/start-kernel分析/",favicon:{show:"（●´3｀●）やれやれだぜ",hide:"(´Д｀)大変だ！"},search:{placeholder:"文章搜索",empty:"关于 「 ${query} 」，什么也没搜到",stats:"${time} ms 内找到 ${hits} 条结果"},valine:!0,fancybox:!0,copyright:'复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',ignores:[function(e){return e.includes("#")},function(e){return new RegExp(LOCAL.path+"$").test(e)}]}</script><script src="https://cdn.polyfill.io/v2/polyfill.js"></script><script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script><script src="/js/app.js?v=0.2.5"></script></body></html>
