@@ -13,17 +13,11 @@
         <pubDate>Fri, 30 Jun 2023 13:01:42 +0800</pubDate>
         <lastBuildDate>Fri, 30 Jun 2023 13:01:42 +0800</lastBuildDate>
         <item>
-            <guid isPermalink="true">https://hdqjl317.github.io/2023/06/30/title/</guid>
-            <title>title</title>
-            <link>https://hdqjl317.github.io/2023/06/30/title/</link>
-            <pubDate>Fri, 30 Jun 2023 13:01:42 +0800</pubDate>
-            <description><![CDATA[  ]]></description>
-        </item>
-        <item>
             <guid isPermalink="true">https://hdqjl317.github.io/2023/06/30/hello-world/</guid>
             <title>Hello World</title>
             <link>https://hdqjl317.github.io/2023/06/30/hello-world/</link>
-            <pubDate>Fri, 30 Jun 2023 12:30:04 +0800</pubDate>
+            <category term="其他" scheme="https://hdqjl317.github.io/tags/%E5%85%B6%E4%BB%96/" />
+            <pubDate>Fri, 30 Jun 2023 13:01:42 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;Welcome to &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZXhvLmlvLw==&#34;&gt;Hexo&lt;/span&gt;! This is your very first post. Check &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZXhvLmlvL2RvY3Mv&#34;&gt;documentation&lt;/span&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZXhvLmlvL2RvY3MvdHJvdWJsZXNob290aW5nLmh0bWw=&#34;&gt;troubleshooting&lt;/span&gt; or you can ask me on &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL2hleG9qcy9oZXhvL2lzc3Vlcw==&#34;&gt;GitHub&lt;/span&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;quick-start&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#quick-start&#34;&gt;#&lt;/a&gt; Quick Start&lt;/h2&gt;
 &lt;h3 id=&#34;create-a-new-post&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#create-a-new-post&#34;&gt;#&lt;/a&gt; Create a new post&lt;/h3&gt;
@@ -35,6 +29,14 @@
 &lt;h3 id=&#34;deploy-to-remote-sites&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#deploy-to-remote-sites&#34;&gt;#&lt;/a&gt; Deploy to remote sites&lt;/h3&gt;
 &lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;span&gt;h&lt;/span&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;$ hexo deploy&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;More info: &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZXhvLmlvL2RvY3Mvb25lLWNvbW1hbmQtZGVwbG95bWVudC5odG1s&#34;&gt;Deployment&lt;/span&gt;&lt;/p&gt;
  ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://hdqjl317.github.io/2023/06/30/%E6%B5%8B%E8%AF%95/</guid>
+            <title>测试</title>
+            <link>https://hdqjl317.github.io/2023/06/30/%E6%B5%8B%E8%AF%95/</link>
+            <category term="其他" scheme="https://hdqjl317.github.io/tags/%E5%85%B6%E4%BB%96/" />
+            <pubDate>Fri, 30 Jun 2023 13:01:42 +0800</pubDate>
+            <description><![CDATA[  ]]></description>
         </item>
     </channel>
 </rss>
