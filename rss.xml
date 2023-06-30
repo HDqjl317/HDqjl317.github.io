@@ -16,6 +16,8 @@
             <guid isPermalink="true">https://hdqjl317.github.io/2023/06/30/computer-science/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/</guid>
             <title>编译原理</title>
             <link>https://hdqjl317.github.io/2023/06/30/computer-science/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/</link>
+            <category term="计算机科学" scheme="https://hdqjl317.github.io/categories/computer-science/" />
+            <category term="编译" scheme="https://hdqjl317.github.io/tags/%E7%BC%96%E8%AF%91/" />
             <pubDate>Fri, 30 Jun 2023 16:50:54 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;什么是编译器&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#什么是编译器&#34;&gt;#&lt;/a&gt; 什么是编译器&lt;/h2&gt;
 &lt;p&gt;所谓编译原理，也就是编译器的工作原理，因此先要明白什么是编译器。编译器的基本定义是：将一门语言转换为另一门语言，一般指将高级语言转换为机器语言，但仅仅是转换并不执行。编译器最基本的底线，就是保证源代码和目标代码的语义相同。&lt;/p&gt;
@@ -480,21 +482,21 @@
             <description><![CDATA[ &lt;p&gt;&lt;strong&gt;一，生成密钥，或者在购买服务器时选择 ssh 密匙登录&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;第一种：通过指令 ssh-keygen 生成，具体的我就不说了&lt;/p&gt;
 &lt;p&gt;第二种：通过服务商生成，阿里云，腾讯云，华为云的网站有创建密钥的，比如腾讯云&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;/2022/08/20/worktech/vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20230204153756653.png&#34; class=&#34;&#34; title=&#34;这是一张图片&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20230204153756653.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;二，将密钥绑定到服务器，也可以在网站直接操作，修改密码为密钥就好了&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;三，在 vscode 上安装 Remote Development 插件，然后将几个扩展包也安装一下&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;四，点击远程资源管理器&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;/2022/08/20/worktech/vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20230204153918156.png&#34; class=&#34;&#34; title=&#34;这是一张图片&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20230204153918156.png&#34; alt=&#34;&#34; /&gt;&lt;br /&gt;
 &lt;strong&gt;五，点击 + 号在输入框输入 ssh 登录名 @IP 地址&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;/2022/08/20/worktech/vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20230204153949670.png&#34; class=&#34;&#34; title=&#34;这是一张图片&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20230204153949670.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;六，输入完成后按回车会出现选择选择，选择 C:User\XXX.ssh\config&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;/2022/08/20/worktech/vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20230204154137681.png&#34; class=&#34;&#34; title=&#34;这是一张图片&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20230204154137681.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;上面三条是自动生成的，Host 那条是本地名称，可以修改用来区分服务器，最后一条写的是私钥的地址，地址加上 “”。然后点击下图这个符号就可以连接远程服务器了。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;/2022/08/20/worktech/vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20230204154455497.png&#34; class=&#34;&#34; title=&#34;这是一张图片&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20230204154455497.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
  ]]></description>
         </item>
