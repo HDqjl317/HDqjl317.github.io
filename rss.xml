@@ -29,6 +29,7 @@
             <description><![CDATA[ &lt;p&gt;&lt;strong&gt;一，生成密钥，或者在购买服务器时选择 ssh 密匙登录&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;第一种：通过指令 ssh-keygen 生成，具体的我就不说了&lt;/p&gt;
 &lt;p&gt;第二种：通过服务商生成，阿里云，腾讯云，华为云的网站有创建密钥的，比如腾讯云&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;/2022/08/20/worktech/vscode%E9%80%9A%E8%BF%87%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20230204153756653.png&#34; class=&#34;&#34; title=&#34;这是一张图片&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;assets/paperphone/image-20230204153756653.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;二，将密钥绑定到服务器，也可以在网站直接操作，修改密码为密钥就好了&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;三，在 vscode 上安装 Remote Development 插件，然后将几个扩展包也安装一下&lt;/strong&gt;&lt;/p&gt;
